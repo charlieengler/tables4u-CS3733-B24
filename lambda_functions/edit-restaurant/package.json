@@ -1,0 +1,19 @@
+{
+    "name": "login",
+    "version": "1.0.0",
+    "description": "Login a user",
+    "main": "index.mjs",
+    "repository": "TBA",
+    "author": "Aman Hiregoudar",
+    "license": "MIT",
+    "dependencies": {
+      "mysql": "^2.18.1"
+    },
+    "scripts": {
+      
+    },
+    "devDependencies": {
+      
+    }
+  }
+  
