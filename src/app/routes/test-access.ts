@@ -1,4 +1,3 @@
-import { access } from "fs";
 import getInstance from "./instance";
 
 export default function testAccess(token: string | null) {
