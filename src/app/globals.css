@@ -4,6 +4,7 @@
 
 :root {
     --background: #fffcf0;
+    --error: #e76f51;
     --primary: #b9cec2;
     --secondary: #f6e7cb;
     --text: #272727;
@@ -11,4 +12,5 @@
 
 body {
     background-color: var(--background);
+    color: var(--text);
 }
