@@ -34,40 +34,58 @@ export const handler = async (event) => {
     schedule_friday, 
     schedule_saturday, 
     schedule_sunday) => {
+      return new Promise((resolve, reject) => {
+        pool.query(`UPDATE Restaurants SET  
+          address = ?, 
+          state = ?,
+          zipcode = ?,
+          closings = ?,
+          schedule_monday = ?, 
+          schedule_tuesday = ?, 
+          schedule_wednesday = ?, 
+          schedule_thursday = ?, 
+          schedule_friday = ?, 
+          schedule_saturday = ?, 
+          schedule_sunday = ? WHERE uid = ?`, [  
+          address, 
+          state, 
+          zipcode,
+          closings, 
+          schedule_monday, 
+          schedule_tuesday, 
+          schedule_wednesday, 
+          schedule_thursday, 
+          schedule_friday, 
+          schedule_saturday, 
+          schedule_sunday,  
+          uid], (error, rows) => {
+            if (error) { return reject(error); }
+            if ((rows)) {
+              return resolve(true)
+            }
+            else {
+              return resolve(false)
+            }
+        })
+    })
+  }
+
+  let assignTables = (table) => {
     return new Promise((resolve, reject) => {
-      pool.query(`UPDATE Restaurants SET  
-        address = ?, 
-        state = ?,
-        zipcode = ?,
-        closings = ?,
-        schedule_monday = ?, 
-        schedule_tuesday = ?, 
-        schedule_wednesday = ?, 
-        schedule_thursday = ?, 
-        schedule_friday = ?, 
-        schedule_saturday = ?, 
-        schedule_sunday = ? WHERE uid = ?`, [  
-        address, 
-        state, 
-        zipcode,
-        closings, 
-        schedule_monday, 
-        schedule_tuesday, 
-        schedule_wednesday, 
-        schedule_thursday, 
-        schedule_friday, 
-        schedule_saturday, 
-        schedule_sunday,  
-        uid], (error, rows) => {
+      pool.query("INSERT INTO Tables (restaurant, seats) VALUES (?,?)", [table[0], table[1]], (error, rows) => {
           if (error) { return reject(error); }
-          if ((rows)) {
-            return resolve(true)
-          }
-          else {
-            return resolve(false)
-          }
+          return resolve(rows);
       })
-  })
+    })
+  }
+
+  let deleteTables = (restaurant) => {
+    return new Promise((resolve, reject) => {
+      pool.query("DELETE FROM Tables WHERE restaurant=?", [restaurant], (error, rows) => {
+          if (error) { return reject(error); }
+          return resolve(rows);
+      })
+    })
   }
 
   let restaurant = await getRestaurant(event.uid)
@@ -90,6 +108,13 @@ export const handler = async (event) => {
         event.schedule_saturday, 
         event.schedule_sunday
       )
+
+      await deleteTables(event.uid)
+
+      for (const table of event.tables) {
+        await assignTables(table)
+      }
+
       if(result == true){
         return {
           statusCode: 200,
