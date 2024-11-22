@@ -38,14 +38,60 @@ export const handler = async (event) => {
             })
         })
     }
+
+    let findTables = (restaurant, guests) => {
+        return new Promise((resolve, reject) => {
+            pool.query("SELECT tid FROM Tables WHERE restaurant=? AND seats>=?", [restaurant, guests], (error, rows) => {
+                if (error) { return reject(error); }
+                return resolve(rows);
+            })
+        })
+    }
+
+    let checkAvailable = (tableID) => {
+        return new Promise((resolve, reject) => {
+            pool.query("SELECT * FROM Reservations WHERE table_num=?", [tableID], (error, rows) => {
+                if (error) { return reject(error); }
+                return resolve(rows);
+            })
+        })
+    }
+
+    let assignTable = (tableID, rid) => {
+        return new Promise((resolve, reject) => {
+            pool.query("UPDATE Reservations SET table_num = ? WHERE rid = ?", [tableID, rid], (error, rows) => {
+                if (error) { return reject(error); }
+                return resolve(rows);
+            })
+        })
+    }
     
     let rid = await getRid(event.date, event.time, event.email, event.restaurant, event.guests)
-    console.log(rid)
     if (rid == undefined){
+        let tablesBySize = await findTables(event.restaurant, event.guests)
+        let availableTables = []
+        for (const tableID of tablesBySize) {
+            let available = await checkAvailable(tableID.tid)
+            if(available.length == 0){
+                availableTables.push(tableID.tid)
+            }
+        }
+        // console.log("tables:", availableTables)
+        if(availableTables.length == 0){
+            return{
+                statusCode: 400,
+                body: {
+                    "error": "No available tables",
+                }
+            }
+        }
+
         await createReservation(event.date, event.time, event.email, event.restaurant, event.guests)
+        
         let rid = await getRid(event.date, event.time, event.email, event.restaurant, event.guests)
         let confCode = String(rid.rid).padStart(6, '0');
-        console.log(confCode, rid.rid)
+        // console.log(confCode, rid.rid)
+        await assignTable(availableTables[0], rid.rid)
         await setConfCode(confCode, rid.rid)
 
         if(confCode > 0){
