@@ -10,6 +10,14 @@ export const handler = async (event) => {
         database: "tables4u"
     }); 
 
+    let exists = (confCode) => {
+        return new Promise((resolve, reject) => {
+            pool.query("SELECT * FROM Reservations WHERE confirmation_code =?;", [confCode], (error, rows) => {
+                if (error) { return reject(error); }
+                return resolve(rows);
+            })
+        })
+    }
 
     let cancelReservation = (confCode) => {
     return new Promise((resolve, reject) => {
@@ -20,22 +28,28 @@ export const handler = async (event) => {
     })
     }
 
-    let result = await cancelReservation(event.confCode)
+
+    let reservationExists = await exists(event.confCode)
+    console.log(reservationExists)
+
+    let result
+
+    if(reservationExists.length == 1){
+        let result = await cancelReservation(event.confCode)
+
+        if(result){
+            return{
+                statusCode: 200,
+                body: "Reservation Cancelled"
+            }
+        }
+    }
+
     pool.end()
-
-    if(result){
-        return{
-            statusCode: 200,
-            body: "Reservation Cancelled"
-        }
+    return{
+        statusCode: 400,
+        body: {
+            "error": "Reservation does not exist"
+          }
     }
-    else{
-        return{
-            statusCode: 400,
-            body: {
-                "error": "Reservation does not exist"
-              }
-        }
-    }
-
 }
