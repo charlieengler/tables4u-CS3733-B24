@@ -4,9 +4,10 @@ import { HashRouter, Routes, Route } from 'react-router-dom';
 
 import Banner from './components/Banner';
 
-import Consumer from './pages/Consumer';
-import RestaurantManager from './pages/RestaurantManager';
 import Administrator from './pages/Administrator';
+import Consumer from './pages/Consumer';
+import CreateRestaurant from './pages/CreateRestaurant';
+import RestaurantManager from './pages/RestaurantManager';
 
 export default function Home() {
     return (
@@ -17,6 +18,7 @@ export default function Home() {
                 <Route element={<Consumer/>} path='/'/>
                 <Route element={<RestaurantManager/>} path='/restaurant-manager'/>
                 <Route element={<Administrator/>} path='/administrator'/>
+                <Route element={<CreateRestaurant/>} path='/create-restaurant'/>
             </Routes>
         </HashRouter>
     );

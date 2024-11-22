@@ -21,7 +21,7 @@
 .alert-container {
     background-color: var(--secondary);
     border: 3px solid var(--error);
-    border-radius: 10px;
+    border-radius: var(--border-radius);
     left: calc(50vw - 500px/2);
     position: absolute;
     top: calc(50vh - 300px/2);
@@ -30,7 +30,7 @@
 
 .alert-header {
     background-color: var(--primary);
-    border-radius: 10px;
+    border-radius: var(--border-radius);
     font-size: 40px;
     font-weight: 600;
     height: 80px;

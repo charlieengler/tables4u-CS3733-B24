@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import secureLocalStorage from 'react-secure-storage';
 
 import Alert from '../components/Alert';
 
-import login from '../routes/login';
-import logout from '../routes/logout';
+import { login, logout } from '../routes/user';
 
 import './styles/Banner.css';
 
@@ -17,6 +18,15 @@ export default function Banner() {
     const [loginMessage, setLoginMessage] = useState<string | null>(null);
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
+
+    const createUser = () => {
+        navigate('/create-restaurant', {
+            state: {
+                username: username,
+                password: password,
+            },
+        });
+    }
 
     const loginUser = async (username: string, password: string) => {
         try {
@@ -41,10 +51,16 @@ export default function Banner() {
         }
     }
 
+    useEffect(() => {
+        // TODO: Make sure the restaurant manager is saved in secureLocalStorage
+        if(secureLocalStorage.getItem('uid'))
+            setIsLoggedIn(true);
+    }, []);
+
     return (
         <>
             <div className='main-container'>
-                <div className='title'>Tables4u</div>
+                <div className='title' onClick={() => navigate('/')}>Tables4u</div>
 
                 {!isLoggedIn ?
                     <div className='login-container'>
@@ -55,7 +71,7 @@ export default function Banner() {
 
                         <div className='login-button-container'>
                             <button className='login-button' onClick={() => loginUser(username, password)}>Log In</button>
-                            <button className='login-button'>Create Account</button>
+                            <button className='login-button' onClick={createUser}>Create Account</button>
                         </div>
                     </div> :
 

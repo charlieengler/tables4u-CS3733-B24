@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export default function getInstance(baseURL: string) {
+export default function createInstance(baseURL: string) {
     const instance = axios.create({
         baseURL: baseURL,
     });
