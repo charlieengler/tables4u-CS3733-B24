@@ -1,57 +1,73 @@
 import mysql from 'mysql2';
 import jwt from 'jsonwebtoken';
 
-export const handler = async (event) => {
+const redirect = accessLevel => {
+    if(accessLevel == 'A') {
+        return '/administrator';
+    } else if(accessLevel == 'M') {
+        return '/restaurant-manager';
+    } else {
+        return '/';
+    }
+}
 
+export const handler = async (event) => {
     // get credentials from the db_access layer (loaded separately via AWS console)
-    var pool = mysql.createPool({
+    const pool = mysql.createPool({
         host: "tables4u.cl4s68owkgsy.us-east-2.rds.amazonaws.com",
         user: "charlieengler",
         password: "nTAR9EBBSsJcS8Gb",
         database: "tables4u"
     });
 
-    let getEmployee = (username, password) => {
+    const getEmployee = (username, password) => {
         return new Promise((resolve, reject) => {
             pool.query("SELECT eid, access_level FROM tables4u.Employees WHERE username = ? AND password = ?;", [username, password], (error, rows) => {
-                if (error) { return reject(error); }
-                return resolve(rows[0]);
+                if(error) {
+                    reject(error);
+                }
+
+                resolve(rows[0]);
             })
         })
     }
 
-    let result = await getEmployee(event.username, event.password);
+    try {
+        const employee = await getEmployee(event.username, event.password);
 
-    pool.end()
-    if (result != null) {
+        if (employee == null) {
+            return {
+                statusCode: 400,
+                body: {
+                    error: "Invalid username or password"
+                }
+            };
+        }
+
         const token = jwt.sign(
             {
-                eid: result.eid,
+                eid: employee.eid,
                 username: event.username,
-                access_level: result.access_level,
+                access_level: employee.access_level,
             },
             process.env["JWT_SECRET"],
             { expiresIn: "5d" },
         );
 
-        const redirect = () => {
-            if(result.access_level == 'A') {
-                return '/administrator';
-            } else if(result.access_level == 'M') {
-                return '/restaurant-manager';
-            } else {
-                return '/';
-            }
-        }
-
         return {
             statusCode: 200,
             body: {
                 token: token,
-                redirect: redirect(),
+                redirect: redirect(employee.access_level),
             },
         };
+    } catch(error) {
+
     }
+    
+    pool.end()
+
+
     return {
         statusCode: 400,
         body: {

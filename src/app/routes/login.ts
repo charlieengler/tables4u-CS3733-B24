@@ -7,12 +7,18 @@ export default function login(username: string, password: string) {
         const instance = getInstance('https://61f3l9b77g.execute-api.us-east-2.amazonaws.com/Initial');
 
         instance.post('/login', {'username': username, 'password': password}).then(res => {
-            const token = res.data.body.token;
-            const redirect = res.data.body.redirect;
+            if(res.data.statusCode == 200) {
+                const token = res.data.body.token;
+                const redirect = res.data.body.redirect;
 
-            secureLocalStorage.setItem('token', token);
+                secureLocalStorage.setItem('token', token);
 
-            resolve(redirect);
+                resolve(redirect);
+            } else {
+                const error = res.data.body.error;
+
+                reject(error);
+            }
         }).catch(err => {
             reject(err);
         });

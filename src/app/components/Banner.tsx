@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import Alert from '../components/Alert';
+
 import login from '../routes/login';
 import logout from '../routes/logout';
 
@@ -12,6 +14,7 @@ export default function Banner() {
     const navigate = useNavigate();
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [loginMessage, setLoginMessage] = useState<string | null>(null);
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
 
@@ -22,7 +25,7 @@ export default function Banner() {
             navigate(loginRedirect);
             setIsLoggedIn(true);
         } catch(err) {
-            console.error(err);
+            setLoginMessage(err as string);
         }
     }
 
@@ -34,32 +37,38 @@ export default function Banner() {
 
             navigate('/');
         } catch(err) {
-            console.error(err);
+            setLoginMessage(err as string);
         }
     }
 
     return (
-        <div className='main-container'>
-            <div className='title'>Tables4u</div>
+        <>
+            <div className='main-container'>
+                <div className='title'>Tables4u</div>
 
-            {!isLoggedIn ?
-                <div className='login-container'>
-                    <div className='login-input-container'>
-                        <input className='login-input' onChange={e => setUsername(e.target.value)} placeholder='Username/Email' type='text' value={username}></input>
-                        <input className='login-input' onChange={e => setPassword(e.target.value)} placeholder='Password' type='password' value={password}></input>
+                {!isLoggedIn ?
+                    <div className='login-container'>
+                        <div className='login-input-container'>
+                            <input className='login-input' onChange={e => setUsername(e.target.value)} placeholder='Username/Email' type='text' value={username}></input>
+                            <input className='login-input' onChange={e => setPassword(e.target.value)} placeholder='Password' type='password' value={password}></input>
+                        </div>
+
+                        <div className='login-button-container'>
+                            <button className='login-button' onClick={() => loginUser(username, password)}>Log In</button>
+                            <button className='login-button'>Create Account</button>
+                        </div>
+                    </div> :
+
+                    <div className='login-container'>
+                        <button className='login-button'>{username}</button>
+                        <button className='login-button' onClick={logoutUser}>Log Out</button>
                     </div>
+                }
 
-                    <div className='login-button-container'>
-                        <button className='login-button' onClick={() => loginUser(username, password)}>Log In</button>
-                        <button className='login-button'>Create Account</button>
-                    </div>
-                </div> :
 
-                <div className='login-container'>
-                    <button className='login-button'>{username}</button>
-                    <button className='login-button' onClick={logoutUser}>Log Out</button>
-                </div>
-            }
-        </div>
+            </div>
+
+            {loginMessage && <Alert callback={() => {setLoginMessage(null)}} message={loginMessage}>Login Error!</Alert>}
+        </>
     );
 }
