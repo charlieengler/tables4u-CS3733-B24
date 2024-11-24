@@ -48,9 +48,9 @@ export const handler = async (event) => {
         })
     }
 
-    let checkAvailable = (tableID) => {
+    let checkAvailable = (tableID, date, time) => {
         return new Promise((resolve, reject) => {
-            pool.query("SELECT * FROM Reservations WHERE table_num=?", [tableID], (error, rows) => {
+            pool.query("SELECT * FROM Reservations WHERE table_num=? AND date=? AND time=?", [tableID, date, time], (error, rows) => {
                 if (error) { return reject(error); }
                 return resolve(rows);
             })
@@ -69,9 +69,10 @@ export const handler = async (event) => {
     let rid = await getRid(event.date, event.time, event.email, event.restaurant, event.guests)
     if (rid == undefined){
         let tablesBySize = await findTables(event.restaurant, event.guests)
+        // console.log(tablesBySize)
         let availableTables = []
         for (const tableID of tablesBySize) {
-            let available = await checkAvailable(tableID.tid)
+            let available = await checkAvailable(tableID.tid, event.date, event.time)
             if(available.length == 0){
                 availableTables.push(tableID.tid)
             }
