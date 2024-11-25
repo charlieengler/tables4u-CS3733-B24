@@ -61,3 +61,28 @@ export function getRestaurantById(uid: number) {
         });
     });
 }
+export function deleteRestaurant(restaurantName: string) {
+    return new Promise((resolve, reject) => {
+        const instance = createInstance('https://h3q7tcd7ji.execute-api.us-east-2.amazonaws.com/Update-3');
+
+
+        instance.post('/delete-restaurant', {
+
+            restaurantName: restaurantName
+  
+        }).then(res => {
+            if(res.data.statusCode == 200) {
+                const resRestaurantName = res.data.body.restaurantName;
+                resolve({
+                    restaurantName: resRestaurantName
+                });
+            } else {
+                const error = res.data.body.error;
+
+                reject(error);
+            }
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
