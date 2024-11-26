@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
+import { redirect } from 'next/navigation';
 
 import secureLocalStorage from 'react-secure-storage';
 
@@ -13,7 +14,7 @@ import { getRestaurantByManager } from '../routes/restaurants';
 import './styles/Banner.css';
 
 export default function Banner() {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loginMessage, setLoginMessage] = useState<string | null>(null);
@@ -21,12 +22,16 @@ export default function Banner() {
     const [username, setUsername] = useState('');
 
     const createUser = () => {
-        navigate('/create-restaurant', {
-            state: {
-                username: username,
-                password: password,
-            },
-        });
+        // navigate('/create-restaurant', {
+        //     state: {
+        //         username: username,
+        //         password: password,
+        //     },
+        // });
+
+        // TODO: Check secure local storage for login state
+
+        redirect('/CreateRestaurant');
     }
 
     const loginUser = async (username: string, password: string) => {
@@ -35,14 +40,15 @@ export default function Banner() {
             const eid = userData.eid;
             const loginRedirect = userData.redirect;
 
-            if(loginRedirect == '/restaurant-manager') {
+            if(loginRedirect == '/RestaurantManager') {
                 const restaurant = await getRestaurantByManager(eid) as any;
 
                 secureLocalStorage.setItem('uid', restaurant.uid);
             }
 
-            navigate(loginRedirect);
+            // navigate(loginRedirect);
             setIsLoggedIn(true);
+            redirect(loginRedirect);
         } catch(err) {
             setLoginMessage(err as string);
         }
@@ -54,7 +60,8 @@ export default function Banner() {
 
             setIsLoggedIn(false);
 
-            navigate('/');
+            // navigate('/');
+            redirect('/');
         } catch(err) {
             setLoginMessage(err as string);
         }
@@ -72,7 +79,7 @@ export default function Banner() {
     return (
         <>
             <div className='main-container'>
-                <div className='title' onClick={() => navigate('/')}>Tables4u</div>
+                <div className='title' onClick={() => {/*navigate('/')*/redirect('/')}}>Tables4u</div>
 
                 {!isLoggedIn ?
                     <div className='login-container'>
@@ -88,7 +95,7 @@ export default function Banner() {
                     </div> :
 
                     <div className='login-container'>
-                        <button className='login-button' onClick={() => navigate('/restaurant-manager')}>{username}</button>
+                        <button className='login-button' onClick={() => {/*navigate('/restaurant-manager')*/redirect('/RestaurantManager')}}>{username}</button>
                         <button className='login-button' onClick={logoutUser}>Log Out</button>
                     </div>
                 }

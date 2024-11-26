@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { findReservation, cancelReservation, listActiveRestaurants } from '../routes/consumer';
 
-import Alert from '../components/Alert';
-import './styles/Consumer.css';
+import Banner from '../components/Banner';
+
+import '../page-styles/Consumer.css';
 
 interface Reservation {
     restaurant: string;
@@ -16,6 +17,8 @@ interface Reservation {
 }
 
 export default function Consumer() {
+    // const navigate = useNavigate();
+
     const [email, setEmail] = useState('')
     const [confCode, setConfCode] = useState('')
     const [reservation, setReservation] = useState<Reservation | null>(null)
@@ -24,7 +27,7 @@ export default function Consumer() {
     const [guests, setGuests] = useState('')
     const [restaurant, setRestaurant] = useState('')
     const [restaurantList, setRestaurantList] = useState<string[]>([])
-    const navigate = useNavigate();
+    
     const options = ["1", "2", "3"]
 
     useEffect(() => {
@@ -37,7 +40,7 @@ export default function Consumer() {
     
     const findRes = async () => {
         try{
-            let resData = await findReservation(email, confCode) as Reservation
+            const resData = await findReservation(email, confCode) as Reservation
             setReservation(resData)
         }
         catch (err){
@@ -60,7 +63,7 @@ export default function Consumer() {
 
     return (
         <>
-
+            <Banner/>
             <div className='create-reservation-container'>
                 <input className='search-input' onChange={e => setDate(e.target.value)} placeholder="Date" type="text" value={date}></input>
                 <input className='search-input' onChange={e => setTime(e.target.value)} placeholder="Time" type="text" value={time}></input>

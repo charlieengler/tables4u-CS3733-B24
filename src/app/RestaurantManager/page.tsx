@@ -1,10 +1,13 @@
 'use client';
 
 import { createRef, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
+// import { useRouter } from 'next/router';
+import { redirect } from 'next/navigation';
 
 import secureLocalStorage from 'react-secure-storage';
 
+import Banner from '../components/Banner';
 import RestaurantDetails from '../components/RestaurantDetails';
 
 import {
@@ -21,10 +24,12 @@ import {
 
 import { getUserById } from '../routes/user';
 
-import './styles/RestaurantManager.css';
+import '../page-styles/RestaurantManager.css';
 
 export default function RestaurantManager() {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
+    // const router = useRouter();
+
     const days = ['M', 'T', 'W', 'R', 'F', 'S', 'S'];
 
     const [address, setAddress] = useState('');
@@ -57,14 +62,18 @@ export default function RestaurantManager() {
 
     const deleteRes = async (uid: number) => {
         if(!secureLocalStorage.getItem('eid'))
-            navigate('/');
+            redirect('/');
+            // router.push('/')
+            // navigate('/');
 
         const eid = secureLocalStorage.getItem('eid') as number;
 
         try {
-            await deleteRestaurant(uid, eid);
+            await deleteRestaurant(uid);
 
-            navigate('/');
+            redirect('/');
+            // router.push('/');
+            // navigate('/');
         } catch(err) {
             console.error(err);
         }
@@ -80,7 +89,9 @@ export default function RestaurantManager() {
 
     const activate = async (uid: number) => {
         if(!secureLocalStorage.getItem('eid'))
-            navigate('/');
+            redirect('/');
+            // router.push('/');
+            // navigate('/');
 
         const eid = secureLocalStorage.getItem('eid') as number;
 
@@ -156,12 +167,16 @@ export default function RestaurantManager() {
         if(secureLocalStorage.getItem('uid'))
             setUid(secureLocalStorage.getItem('uid') as number);
         else
-            navigate('/');
+            redirect('/');
+            // router.push('/');
+            // navigate('/');
 
         if(secureLocalStorage.getItem('eid'))
             setManager(secureLocalStorage.getItem('eid') as number);
         else
-            navigate('/');
+            redirect('/');
+            // router.push('/');
+            // navigate('/');
 
         const getRestaurantData = async (uid: number) => {
             const restaurant = await getRestaurantById(uid) as any;
@@ -206,6 +221,7 @@ export default function RestaurantManager() {
 
     return (
         <>
+            <Banner/>
             <div className='restaurant-title'>{restaurantName}</div>
             {isEditingDetails && <div className='restaurant-details-container'>
                 <RestaurantDetails

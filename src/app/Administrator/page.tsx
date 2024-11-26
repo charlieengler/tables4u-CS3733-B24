@@ -1,21 +1,28 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
+// import { useRouter } from 'next/router';
+import { redirect } from 'next/navigation';
 import secureLocalStorage from 'react-secure-storage';
 
 import { deleteRestaurant, listRestaurants } from '../routes/restaurants';
 
+import Banner from '../components/Banner';
+
 import testAccess from '../routes/test-access';
 import Alert from '../components/Alert';
-import './styles/Admin.css';
+import '../page-styles/Admin.css';
 
 export default function Administrator() {
+    // const navigate = useNavigate();
+    // const router = useRouter();
+
     const [createMessage, setCreateMessage] = useState<string | null>(null);
     const [accessLevel, setAccessLevel] = useState("");
     const [restaurantName, setRestaurantName] = useState('');
     const [restaurants, setRestaurants] = useState<string[]>([]);
-    const navigate = useNavigate();
+    
 
     const listRest = async () => {
         
@@ -44,7 +51,7 @@ export default function Administrator() {
     const delRestaurant = async () => {
         
         try {
-            await deleteRestaurant(restaurantName, 1);
+            await deleteRestaurant(restaurantName);
             console.log("restaurant Deleted: ", restaurantName)
             
 
@@ -60,9 +67,13 @@ export default function Administrator() {
                 const access = await testAccess(token) as string;
 
                 if(access == 'M')
-                    navigate('/restaurant-manager');
+                    redirect('/RestaurantManager');
+                    // router.push('/RestaurantManager');
+                    // navigate('/restaurant-manager');
                 else if(access != 'A')
-                    navigate('/');
+                    redirect('/');
+                    // router.push('/');
+                    // navigate('/');
 
                 setAccessLevel(access);
             } catch(err) {
@@ -75,6 +86,7 @@ export default function Administrator() {
 
     return (
         <>
+            <Banner/>
             {/* {accessLevel == 'A' && <h1>Administrator</h1>} */}
             <div className = 'report-container'>
                 <button className='reload-button' onClick={genReport}>&#x21bb;</button>
