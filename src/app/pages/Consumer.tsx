@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { findReservation, cancelReservation, listActiveRestaurants } from '../routes/consumer';
 
-import Alert from '../components/Alert';
-import './styles/Consumer.css';
+import '../page-styles/Consumer.css';
 
 interface Reservation {
     restaurant: string;

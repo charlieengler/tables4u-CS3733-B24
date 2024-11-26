@@ -21,7 +21,7 @@ import {
 
 import { getUserById } from '../routes/user';
 
-import './styles/RestaurantManager.css';
+import '../page-styles/RestaurantManager.css';
 
 export default function RestaurantManager() {
     const navigate = useNavigate();

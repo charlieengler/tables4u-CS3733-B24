@@ -8,7 +8,7 @@ import { deleteRestaurant, listRestaurants } from '../routes/restaurants';
 
 import testAccess from '../routes/test-access';
 import Alert from '../components/Alert';
-import './styles/Admin.css';
+import '../page-styles/Admin.css';
 
 export default function Administrator() {
     const [createMessage, setCreateMessage] = useState<string | null>(null);
