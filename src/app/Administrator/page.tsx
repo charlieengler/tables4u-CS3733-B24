@@ -51,7 +51,7 @@ export default function Administrator() {
     const delRestaurant = async () => {
         
         try {
-            await deleteRestaurant(restaurantName, 1);
+            await deleteRestaurant(restaurantName);
             console.log("restaurant Deleted: ", restaurantName)
             
 
