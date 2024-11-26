@@ -1,9 +1,35 @@
-.restaurant-manager {
-    font-size: 32px;
-    font-weight: 500;
+.restaurant-activation-container {
+    grid-column-start: 4;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 1;
+}
+
+.restaurant-closings-container {
+    grid-column-start: 3;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 1;
+}
+
+.restaurant-container {
+    display: grid;
+}
+
+.restaurant-data-container {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 3;
+}
+
+.restaurant-schedule-container {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 2;
+    grid-row-end: 3;
 }
 
 .restaurant-title {
-    font-size: 48px;
-    font-weight: 600;
+    text-align: center;
 }
