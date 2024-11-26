@@ -1,18 +1,20 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
+import { redirect } from 'next/navigation';
 
 import secureLocalStorage from 'react-secure-storage';
 
 import Alert from '../components/Alert';
 
 import { login, logout } from '../routes/user';
+import { getRestaurantByManager } from '../routes/restaurants';
 
 import './styles/Banner.css';
 
 export default function Banner() {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loginMessage, setLoginMessage] = useState<string | null>(null);
@@ -20,20 +22,33 @@ export default function Banner() {
     const [username, setUsername] = useState('');
 
     const createUser = () => {
-        navigate('/create-restaurant', {
-            state: {
-                username: username,
-                password: password,
-            },
-        });
+        // navigate('/create-restaurant', {
+        //     state: {
+        //         username: username,
+        //         password: password,
+        //     },
+        // });
+
+        // TODO: Check secure local storage for login state
+
+        redirect('/CreateRestaurant');
     }
 
     const loginUser = async (username: string, password: string) => {
         try {
-            const loginRedirect = await login(username, password) as string;
+            const userData: any = await login(username, password);
+            const eid = userData.eid;
+            const loginRedirect = userData.redirect;
 
-            navigate(loginRedirect);
+            if(loginRedirect == '/RestaurantManager') {
+                const restaurant = await getRestaurantByManager(eid) as any;
+
+                secureLocalStorage.setItem('uid', restaurant.uid);
+            }
+
+            // navigate(loginRedirect);
             setIsLoggedIn(true);
+            redirect(loginRedirect);
         } catch(err) {
             setLoginMessage(err as string);
         }
@@ -45,7 +60,8 @@ export default function Banner() {
 
             setIsLoggedIn(false);
 
-            navigate('/');
+            // navigate('/');
+            redirect('/');
         } catch(err) {
             setLoginMessage(err as string);
         }
@@ -55,12 +71,15 @@ export default function Banner() {
         // TODO: Make sure the restaurant manager is saved in secureLocalStorage
         if(secureLocalStorage.getItem('uid'))
             setIsLoggedIn(true);
+
+        if(secureLocalStorage.getItem('username'))
+            setUsername(secureLocalStorage.getItem('username') as string);
     }, []);
 
     return (
         <>
             <div className='main-container'>
-                <div className='title' onClick={() => navigate('/')}>Tables4u</div>
+                <div className='title' onClick={() => {/*navigate('/')*/redirect('/')}}>Tables4u</div>
 
                 {!isLoggedIn ?
                     <div className='login-container'>
@@ -76,7 +95,7 @@ export default function Banner() {
                     </div> :
 
                     <div className='login-container'>
-                        <button className='login-button'>{username}</button>
+                        <button className='login-button' onClick={() => {/*navigate('/restaurant-manager')*/redirect('/RestaurantManager')}}>{username}</button>
                         <button className='login-button' onClick={logoutUser}>Log Out</button>
                     </div>
                 }

@@ -1,5 +1,3 @@
-import secureLocalStorage from 'react-secure-storage';
-
 import createInstance from "./instance";
 
 export function findReservation(email: String, confCode: String) {

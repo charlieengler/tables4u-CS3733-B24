@@ -1,0 +1,114 @@
+@import url("../globals.css");
+
+.delete-restaurant-button {
+    font-size: 28px;
+    margin-bottom: 20px;
+    margin-left: 10%;
+    margin-right: auto;
+    margin-top: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    width: 80%;
+}
+.delete-restaurant-container {
+    background-color: var(--primary);
+    border-radius: var(--border-radius);
+    margin-left:5%;
+    margin-right: 5%;
+    margin-top: 20px;
+    width: 40%;
+    float: right;
+}
+.report-container {
+    background-color: var(--primary);
+    border-radius: var(--border-radius);
+    margin-left:5%;
+    margin-right: 0% !important;
+    margin-top: 20px;
+    width: 45%;
+    height: 400px;
+    float: left;
+}
+.reload-button {
+    font-size: 28px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    width: 20%;
+    float:left;
+    font-family: Lucida Sans Unicode
+}
+.restaurants-header {
+    font-size: 28px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    width: 40%;
+    float:left;
+}
+.list-container{
+    font-size: 28px;
+    margin-bottom: 20px;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    width: 80%;
+    background-color: var(--secondary);
+    float:left;
+    border-radius: 5px;
+}
+.admin-dropdown {
+    background-color: white;
+    display: inline-block;
+    font-size: 28px;
+    margin-top: 20px !important;
+    margin-left: 10% !important;
+    margin-right: 5%;
+    padding-left: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 80% !important;
+    margin-right: auto;
+    border-radius: 5px;
+}
+.restaurants-text {
+    font-size: 28px;
+    margin-bottom: 0px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 0px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    width: 80%;
+}
+
+.create-restaurant-subcontainer {
+    background-color: var(--primary);
+    display: inline-block;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    width: 45%;
+}
+
+.create-restaurant-title {
+    font-size: 42px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.create-restaurant-subtitle {
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+    width: 100%;
+}

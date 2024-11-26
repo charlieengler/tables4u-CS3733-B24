@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { findReservation, cancelReservation, listActiveRestaurants, searchAvailabilityRestaurant } from '../routes/consumer';
+// import { useNavigate } from 'react-router-dom';
+import { findReservation, cancelReservation, listActiveRestaurants } from '../routes/consumer';
 
-import Alert from '../components/Alert';
-import './styles/Consumer.css';
+import Banner from '../components/Banner';
+
+import '../page-styles/Consumer.css';
 
 interface Reservation {
     restaurant: string;
@@ -16,6 +17,8 @@ interface Reservation {
 }
 
 export default function Consumer() {
+    // const navigate = useNavigate();
+
     const [email, setEmail] = useState('')
     const [confCode, setConfCode] = useState('')
     const [reservation, setReservation] = useState<Reservation | null>(null)
@@ -24,9 +27,7 @@ export default function Consumer() {
     const [guests, setGuests] = useState('')
     const [restaurant, setRestaurant] = useState('')
     const [restaurantList, setRestaurantList] = useState<string[]>([])
-    const [restaurantTimes, setRestaurantTimes] = useState<{ [key: string]: number[] }>({});
-
-    const navigate = useNavigate();
+    
     const options = ["1", "2", "3"]
 
     useEffect(() => {
@@ -39,7 +40,7 @@ export default function Consumer() {
     
     const findRes = async () => {
         try{
-            let resData = await findReservation(email, confCode) as Reservation
+            const resData = await findReservation(email, confCode) as Reservation
             setReservation(resData)
         }
         catch (err){
@@ -60,48 +61,21 @@ export default function Consumer() {
         }
     }
 
-    const findTables = async () => {
-        if(restaurant == ''){ //search all restaurants
-
-        }
-        else{   //search given restaurant
-            try{
-                const times: number[] = await searchAvailabilityRestaurant(restaurant, date)
-                setRestaurantTimes(prevTimes => ({
-                    ...prevTimes,
-                    [restaurant]: times,
-                }));
-                console.log(restaurantTimes)    
-            }
-            catch (err){
-                console.log(err)
-            }
-        }
-    }
-
     return (
         <>
-
+            <Banner/>
             <div className='create-reservation-container'>
                 <input className='search-input' onChange={e => setDate(e.target.value)} placeholder="Date" type="text" value={date}></input>
-                <input className='search-input' onChange={e => setTime(e.target.value)} placeholder="Time" type='text' value={time}></input>
+                <input className='search-input' onChange={e => setTime(e.target.value)} placeholder="Time" type="text" value={time}></input>
                 <input className='search-input' onChange={e => setGuests(e.target.value)} placeholder="Guests" type="text" value={guests}></input>
                 <select className='dropdown' onChange={e => setRestaurant(e.target.value)} value={restaurant}>
-                    <option value="" disabled>Select a Restaurant</option>
+                    <option value="" disabled>Select an Restaurant</option>
                     {restaurantList?.map((option, index) => (
                         <option key={index} value={option}>
                             {option}
                         </option>
                 ))}</select>
-                <button className='search-button' onClick={findTables}>Search - doesnt work yet</button>
-            </div>
-
-            <div className='restaurant-container'>
-                {restaurantList.map((restaurant, index) => (
-                    <div key={index} className="restaurant-item">
-                        {restaurant}
-                    </div>
-                ))}
+                <button className='search-button' onClick={findRes}>Search</button>
             </div>
 
             <div className='find-reservation-container'>
@@ -113,7 +87,6 @@ export default function Consumer() {
                 <button className='find-reservation-button' onClick={findRes}>Find Reservation</button>
                 <button className='cancel-reservation-button' onClick={cancelRes}>Cancel Reservation</button>           
             </div>
-            
             
             
             
