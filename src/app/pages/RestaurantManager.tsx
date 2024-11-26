@@ -62,7 +62,7 @@ export default function RestaurantManager() {
         const eid = secureLocalStorage.getItem('eid') as number;
 
         try {
-            await deleteRestaurant(uid, eid);
+            await deleteRestaurant(uid);
 
             navigate('/');
         } catch(err) {

@@ -42,7 +42,7 @@ export function createRestaurant(email: string, username: string, password: stri
     });
 }
 
-export function deleteRestaurant(uid: number | string, eid: number) {
+export function deleteRestaurant(uid: number | string) {
     return new Promise((resolve, reject) => {
         const instance = createInstance('https://h3q7tcd7ji.execute-api.us-east-2.amazonaws.com/Development');
 
