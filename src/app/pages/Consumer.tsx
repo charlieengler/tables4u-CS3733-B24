@@ -36,7 +36,7 @@ export default function Consumer() {
     
     const findRes = async () => {
         try{
-            let resData = await findReservation(email, confCode) as Reservation
+            const resData = await findReservation(email, confCode) as Reservation
             setReservation(resData)
         }
         catch (err){
