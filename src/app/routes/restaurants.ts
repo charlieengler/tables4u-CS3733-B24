@@ -96,6 +96,7 @@ export function getRestaurantById(uid: number) {
     });
 }
 
+
 export function getRestaurantByManager(eid: number) {
     return new Promise((resolve, reject) => {
         const instance = createInstance('https://h3q7tcd7ji.execute-api.us-east-2.amazonaws.com/Development');
@@ -179,7 +180,6 @@ export function updateClosingDates(uid: number, closings: string[]) {
 export function updateRestaurantDetails(uid: number, eid: number, email: string, username: string, password: string, name: string, address: string, cityState: string, zipcode: string) {
     return new Promise((resolve, reject) => {
         const instance = createInstance('https://h3q7tcd7ji.execute-api.us-east-2.amazonaws.com/Development');
-
         instance.post('/set-restaurant/details', {
             uid: uid,
             eid: eid,
@@ -237,6 +237,26 @@ export function updateTableCount(seatCount: number, numTables: number, uid: numb
                 const tables = res.data.body.tables;
 
                 resolve(tables);
+            } else {
+                const error = res.data.body.error;
+
+                reject(error);
+            }
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+export function listRestaurants() {
+    return new Promise((resolve, reject) => {
+        const instance = createInstance('https://h3q7tcd7ji.execute-api.us-east-2.amazonaws.com/Development');
+        instance.get('/list-restaurants', {
+        }).then(res => {
+            if(res.data.statusCode == 200) {
+                const resRestaurantName = res.data.body.restaurants.map((restaurant: { name: any; }) => restaurant.name);
+                resolve(
+                    resRestaurantName
+                );
             } else {
                 const error = res.data.body.error;
 

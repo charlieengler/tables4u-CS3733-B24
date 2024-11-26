@@ -13,7 +13,7 @@ let getuid = (restaurantName) => {
   return new Promise((resolve, reject) => {
       pool.query("SELECT uid FROM tables4u.Restaurants WHERE name =?;", [restaurantName], (error, rows) => {
           if (error) { return reject(error); }
-          return resolve(rows[0].uid);
+          return resolve(rows);
       })
   })
 }
@@ -63,8 +63,25 @@ if(isNaN(uid)){
 }
 if(isNaN(uid)){
   uid = await getuid(event.restaurant)
+  if(uid.length==0){
+    pool.end();
+    return {
+      statusCode: 400,
+      body: {
+        "error":"Invalid Restaurant"}
+    }
+  }
+  uid = uid[0].uid
 }
 let manager = await getManager(uid)
+if(manager==null){
+  pool.end();
+  return {
+    statusCode: 400,
+    body: {
+      "error":"Invalid Restaurant"}
+  }
+}
 //Delete Reservations
 await deleteReservations(uid)
 //Delete Tables
@@ -73,7 +90,7 @@ await deleteTables(uid)
 await deleteRestaurant(uid)
 //Delete Manager
 await deleteManager(manager)
-pool.end()
+pool.end();
 
 return {
   statusCode: 200,
