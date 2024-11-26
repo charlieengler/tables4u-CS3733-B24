@@ -29,10 +29,22 @@ export default function Administrator() {
             // setCreateMessage(err as string);
         }
     }
+    const genReport = async () => {
+        
+        try {
+            const rest = await listRestaurants() as string[];
+            setRestaurants(rest);
+            
+
+        } catch (err) {
+            console.log(err);
+            // setCreateMessage(err as string);
+        }
+    }
     const delRestaurant = async () => {
         
         try {
-            await deleteRestaurant(restaurantName);
+            await deleteRestaurant(restaurantName, 1);
             console.log("restaurant Deleted: ", restaurantName)
             
 
@@ -64,9 +76,18 @@ export default function Administrator() {
     return (
         <>
             {/* {accessLevel == 'A' && <h1>Administrator</h1>} */}
+            <div className = 'report-container'>
+                <button className='reload-button' onClick={genReport}>&#x21bb;</button>
+            </div>
             <div className='delete-restaurant-container'>
-                <input className='delete-restaurant-input' onChange={e => setRestaurantName(e.target.value)} placeholder='Restaurant Name' type='text' value={restaurantName}></input>
-                <button className='delete-restaurant-button' onClick={()=>{delRestaurant(); setRestaurantName("");} }>Delete Restaurant</button>
+                <select className='admin-dropdown' onChange={e => setRestaurantName(e.target.value)} value={restaurantName}>
+                    <option value="" disabled>Select an Restaurant</option>
+                    {restaurants?.map((option, index) => (
+                        <option key={index} value={option}>
+                            {option}
+                        </option>
+                ))}</select>
+                <button className='delete-restaurant-button' onClick={()=>{delRestaurant(); setRestaurantName(""); listRest();} }>Delete Restaurant</button>
             </div>
             <div className='delete-restaurant-container'>
                 <button className='reload-button' onClick={listRest}>&#x21bb;</button>
