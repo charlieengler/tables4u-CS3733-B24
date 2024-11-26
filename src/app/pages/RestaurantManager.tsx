@@ -295,7 +295,7 @@ export default function RestaurantManager() {
                 </div>
 
                 <div className='restaurant-schedule-container'>
-                
+                <h1>Daily Schedules: </h1>
                         {schedules && days.map((day, index) => {
                             return (
                                 <div className='restaurant-schedule-day-container' key={index.toString() + '-schedule-days'}>
@@ -306,11 +306,12 @@ export default function RestaurantManager() {
                             );
                         })}
 
+                    <h1>Table Counts: </h1>
                     <div className='restaurant-schedule-tables-container'>
                         {tableCounts && uid && [1, 2, 3, 4, 5, 6, 7, 8].map((count, index) => {
                             return (
                                 <div className='restaurant-schedule-table-count-container' key={index.toString() + '-schedule-tables'}>
-                                    <div className='restaurant-schedule-table-occupancy'>{count}</div>
+                                    <div className='restaurant-schedule-table-occupancy'>{count + " seater:"}</div>
                                     <input className='restaurant-schedule-table-count' defaultValue={tableCounts[index]} onChange={e => updateTable(count, Number(e.target.value), uid as number)} type='number'/>
                                 </div>
                             );
