@@ -21,6 +21,8 @@ export default function Banner() {
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
 
+    // TODO: Check secure local storage for login state
+
     const createUser = () => {
         // navigate('/create-restaurant', {
         //     state: {
@@ -29,16 +31,18 @@ export default function Banner() {
         //     },
         // });
 
-        // TODO: Check secure local storage for login state
+        // TODO: Pass username and password to /CreateRestaurant somehow
 
         redirect('/CreateRestaurant');
     }
 
     const loginUser = async (username: string, password: string) => {
+        let loginRedirect: string | null = null;
+
         try {
             const userData: any = await login(username, password);
             const eid = userData.eid;
-            const loginRedirect = userData.redirect;
+            loginRedirect = userData.redirect;
 
             if(loginRedirect == '/RestaurantManager') {
                 const restaurant = await getRestaurantByManager(eid) as any;
@@ -48,9 +52,12 @@ export default function Banner() {
 
             // navigate(loginRedirect);
             setIsLoggedIn(true);
-            redirect(loginRedirect);
+            
         } catch(err) {
             setLoginMessage(err as string);
+        } finally {
+            if(loginRedirect)
+                redirect(loginRedirect);
         }
     }
 
@@ -61,9 +68,10 @@ export default function Banner() {
             setIsLoggedIn(false);
 
             // navigate('/');
-            redirect('/');
         } catch(err) {
             setLoginMessage(err as string);
+        } finally {
+            redirect('/');
         }
     }
 

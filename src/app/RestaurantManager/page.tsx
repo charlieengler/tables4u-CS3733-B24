@@ -62,7 +62,7 @@ export default function RestaurantManager() {
 
     const deleteRes = async (uid: number) => {
         if(!secureLocalStorage.getItem('eid'))
-            redirect('/');
+            return redirect('/');
             // router.push('/')
             // navigate('/');
 
@@ -70,12 +70,12 @@ export default function RestaurantManager() {
 
         try {
             await deleteRestaurant(uid);
-
+        } catch(err) {
+            console.error(err);
+        } finally {
             redirect('/');
             // router.push('/');
             // navigate('/');
-        } catch(err) {
-            console.error(err);
         }
     }
 
@@ -89,7 +89,7 @@ export default function RestaurantManager() {
 
     const activate = async (uid: number) => {
         if(!secureLocalStorage.getItem('eid'))
-            redirect('/');
+            return redirect('/');
             // router.push('/');
             // navigate('/');
 
@@ -167,14 +167,14 @@ export default function RestaurantManager() {
         if(secureLocalStorage.getItem('uid'))
             setUid(secureLocalStorage.getItem('uid') as number);
         else
-            redirect('/');
+            return redirect('/');
             // router.push('/');
             // navigate('/');
 
         if(secureLocalStorage.getItem('eid'))
             setManager(secureLocalStorage.getItem('eid') as number);
         else
-            redirect('/');
+            return redirect('/');
             // router.push('/');
             // navigate('/');
 

@@ -63,9 +63,14 @@ export default function Administrator() {
     useEffect(() => {
         const getAccessLevel = async () => {
             const token: string | null = secureLocalStorage.getItem('token') as string;
+            let access: string | null = null;
             try {
-                const access = await testAccess(token) as string;
+                access = await testAccess(token) as string;
 
+                setAccessLevel(access);
+            } catch(err) {
+                console.error(err);
+            } finally {
                 if(access == 'M')
                     redirect('/RestaurantManager');
                     // router.push('/RestaurantManager');
@@ -74,10 +79,6 @@ export default function Administrator() {
                     redirect('/');
                     // router.push('/');
                     // navigate('/');
-
-                setAccessLevel(access);
-            } catch(err) {
-                console.error(err);
             }
         }
         

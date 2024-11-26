@@ -19,12 +19,12 @@ function CreateRestaurant(props: any) {
 
         try {
             await createRestaurant(email, username, password, name, address, cityState, zipcode);
-
+        } catch (err) {
+            console.error(err);
+        } finally {
             // navigate('/restaurant-manager');
             // router.push('/RestaurantManager');
             redirect('/RestaurantManager');
-        } catch (err) {
-            console.error(err);
         }
     }
 
