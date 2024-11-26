@@ -61,21 +61,46 @@ export function getRestaurantById(uid: number) {
         });
     });
 }
-export function deleteRestaurant(restaurantName: string) {
+
+export function deleteRestaurant(restaurant: string) {
     return new Promise((resolve, reject) => {
-        const instance = createInstance('https://h3q7tcd7ji.execute-api.us-east-2.amazonaws.com/Update-3');
+        const instance = createInstance('https://h3q7tcd7ji.execute-api.us-east-2.amazonaws.com/Development');
 
 
         instance.post('/delete-restaurant', {
 
-            restaurantName: restaurantName
+            restaurant: restaurant
   
         }).then(res => {
             if(res.data.statusCode == 200) {
-                const resRestaurantName = res.data.body.restaurantName;
+                const resRestaurantName = res.data.body.restaurant;
                 resolve({
                     restaurantName: resRestaurantName
                 });
+            } else {
+                const error = res.data.body.error;
+
+                reject(error);
+            }
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+export function listRestaurants() {
+    return new Promise((resolve, reject) => {
+        const instance = createInstance('https://h3q7tcd7ji.execute-api.us-east-2.amazonaws.com/Development');
+
+
+        instance.get('/list-restaurants', {
+
+  
+        }).then(res => {
+            if(res.data.statusCode == 200) {
+                const resRestaurantName = res.data.body.restaurants.map((restaurant: { name: any; }) => restaurant.name);
+                resolve(
+                    resRestaurantName
+                );
             } else {
                 const error = res.data.body.error;
 
