@@ -8,6 +8,7 @@ import secureLocalStorage from 'react-secure-storage';
 import Alert from '../components/Alert';
 
 import { login, logout } from '../routes/user';
+import { getRestaurantByManager } from '../routes/restaurants';
 
 import './styles/Banner.css';
 
@@ -30,7 +31,15 @@ export default function Banner() {
 
     const loginUser = async (username: string, password: string) => {
         try {
-            const loginRedirect = await login(username, password) as string;
+            const userData: any = await login(username, password);
+            const eid = userData.eid;
+            const loginRedirect = userData.redirect;
+
+            if(loginRedirect == '/restaurant-manager') {
+                const restaurant = await getRestaurantByManager(eid) as any;
+
+                secureLocalStorage.setItem('uid', restaurant.uid);
+            }
 
             navigate(loginRedirect);
             setIsLoggedIn(true);
@@ -55,6 +64,9 @@ export default function Banner() {
         // TODO: Make sure the restaurant manager is saved in secureLocalStorage
         if(secureLocalStorage.getItem('uid'))
             setIsLoggedIn(true);
+
+        if(secureLocalStorage.getItem('username'))
+            setUsername(secureLocalStorage.getItem('username') as string);
     }, []);
 
     return (
@@ -76,7 +88,7 @@ export default function Banner() {
                     </div> :
 
                     <div className='login-container'>
-                        <button className='login-button'>{username}</button>
+                        <button className='login-button' onClick={() => navigate('/restaurant-manager')}>{username}</button>
                         <button className='login-button' onClick={logoutUser}>Log Out</button>
                     </div>
                 }
