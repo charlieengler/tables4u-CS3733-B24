@@ -42,7 +42,7 @@ export function createRestaurant(email: string, username: string, password: stri
     });
 }
 
-export function deleteRestaurant(uid: number | string, eid: number) {
+export function deleteRestaurant(uid: number | string) {
     return new Promise((resolve, reject) => {
         const instance = createInstance('https://h3q7tcd7ji.execute-api.us-east-2.amazonaws.com/Development');
 
@@ -253,7 +253,7 @@ export function listRestaurants() {
         instance.get('/list-restaurants', {
         }).then(res => {
             if(res.data.statusCode == 200) {
-                const resRestaurantName = res.data.body.restaurants.map((restaurant: { name: any; }) => restaurant.name);
+                const resRestaurantName = res.data.body.restaurants.map((restaurant: { name: string; }) => restaurant.name);
                 resolve(
                     resRestaurantName
                 );
