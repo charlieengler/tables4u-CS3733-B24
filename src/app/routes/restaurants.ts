@@ -253,7 +253,7 @@ export function listRestaurants() {
         instance.get('/list-restaurants', {
         }).then(res => {
             if(res.data.statusCode == 200) {
-                const resRestaurantName = res.data.body.restaurants.map((restaurant: { name: any; }) => restaurant.name);
+                const resRestaurantName = res.data.body.restaurants.map((restaurant: { name: string; }) => restaurant.name);
                 resolve(
                     resRestaurantName
                 );
