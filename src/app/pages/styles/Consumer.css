@@ -1,20 +1,40 @@
 .create-reservation-container {
+    display: inline-block;
     background-color: var(--tertiary);
     border-radius: var(--border-radius);
     margin-left: 5%;
     margin-right: auto;
     margin-top: 5%;
-    width: 40%;
+    width: 30%;
+}
+
+.restaurant-container {
+    display: inline-block;
+    border-radius: var(--border-radius);
+    margin-left: 5%;
+    margin-right: auto;
+    margin-top: 5%;
+    width: 50%;
+}
+
+.restaurant-item {
+    padding: 10px;
+    margin: 5px;
+    background-color: var(--tertiary);
+    border-radius: 4px;
 }
 
 .find-reservation-container {
+    display: inline-block;
     background-color: var(--tertiary);
     border-radius: var(--border-radius);
     margin-left: 5%;
     margin-right: auto;
-    margin-top: 20%;
-    width: 40%;
+    margin-top: 5%;
+    width: 30%;
 }
+
+
 
 .reservation-subcontainer {
     background-color: white;
@@ -38,6 +58,7 @@
 
 .dropdown {
     background-color: white;
+    border-radius: 5px;
     display: inline-block;
     margin-top: 10px;
     margin-left: 5%;
