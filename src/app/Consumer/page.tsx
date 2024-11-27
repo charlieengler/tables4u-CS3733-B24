@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
-import { findReservation, cancelReservation, listActiveRestaurants } from '../routes/consumer';
+import { findReservation, cancelReservation, listActiveRestaurants, searchAvailabilityRestaurant } from '../routes/consumer';
 
 import Banner from '../components/Banner';
 
@@ -27,9 +27,8 @@ export default function Consumer() {
     const [guests, setGuests] = useState('')
     const [restaurant, setRestaurant] = useState('')
     const [restaurantList, setRestaurantList] = useState<string[]>([])
+    const [restaurantTimes, setRestaurantTimes] = useState<{ [key: string]: number[] }>({});
     
-    const options = ["1", "2", "3"]
-
     useEffect(() => {
         const fetchOptions = async () => {
             const restaurants = await listActiveRestaurants();
@@ -37,6 +36,25 @@ export default function Consumer() {
         };
         fetchOptions();
     }, []);
+
+    const findTables = async () => {
+        if(restaurant == ''){ //search all restaurants
+
+        }
+        else{   //search given restaurant
+            try{
+                const times: number[] = await searchAvailabilityRestaurant(restaurant, date) as number[];
+                setRestaurantTimes(prevTimes => ({
+                    ...prevTimes,
+                    [restaurant]: times,
+                }));
+                console.log(restaurantTimes)    
+            }
+            catch (err){
+                console.log(err)
+            }
+        }
+    }
     
     const findRes = async () => {
         try{
@@ -69,13 +87,21 @@ export default function Consumer() {
                 <input className='search-input' onChange={e => setTime(e.target.value)} placeholder="Time" type="text" value={time}></input>
                 <input className='search-input' onChange={e => setGuests(e.target.value)} placeholder="Guests" type="text" value={guests}></input>
                 <select className='dropdown' onChange={e => setRestaurant(e.target.value)} value={restaurant}>
-                    <option value="" disabled>Select an Restaurant</option>
+                    <option value="" disabled>Select a Restaurant</option>
                     {restaurantList?.map((option, index) => (
                         <option key={index} value={option}>
                             {option}
                         </option>
                 ))}</select>
-                <button className='search-button' onClick={findRes}>Search</button>
+                <button className='search-button' onClick={findRes}>Search - Does not work yet</button>
+            </div>
+
+            <div className='restaurant-container'>
+                {restaurantList.length > 0 ? restaurantList.map((restaurant, index) => (
+                    <div key={index} className="restaurant-item">
+                        {restaurant}
+                    </div>
+                )) : <div>Loading Restaurants...</div>}
             </div>
 
             <div className='find-reservation-container'>

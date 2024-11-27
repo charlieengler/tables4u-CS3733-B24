@@ -21,6 +21,8 @@ export default function Banner() {
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
 
+    // TODO: Check secure local storage for login state
+
     const createUser = () => {
         // navigate('/create-restaurant', {
         //     state: {
@@ -29,16 +31,18 @@ export default function Banner() {
         //     },
         // });
 
-        // TODO: Check secure local storage for login state
+        // TODO: Pass username and password to /CreateRestaurant somehow
 
         redirect('/CreateRestaurant');
     }
 
     const loginUser = async (username: string, password: string) => {
+        let loginRedirect: string | null = null;
+
         try {
             const userData: any = await login(username, password);
             const eid = userData.eid;
-            const loginRedirect = userData.redirect;
+            loginRedirect = userData.redirect;
 
             if(loginRedirect == '/RestaurantManager') {
                 const restaurant = await getRestaurantByManager(eid) as any;
@@ -48,9 +52,12 @@ export default function Banner() {
 
             // navigate(loginRedirect);
             setIsLoggedIn(true);
-            redirect(loginRedirect);
+            
         } catch(err) {
             setLoginMessage(err as string);
+        } finally {
+            if(loginRedirect)
+                redirect(loginRedirect);
         }
     }
 
@@ -61,15 +68,16 @@ export default function Banner() {
             setIsLoggedIn(false);
 
             // navigate('/');
-            redirect('/');
         } catch(err) {
             setLoginMessage(err as string);
+        } finally {
+            redirect('/');
         }
     }
 
     useEffect(() => {
         // TODO: Make sure the restaurant manager is saved in secureLocalStorage
-        if(secureLocalStorage.getItem('uid'))
+        if(secureLocalStorage.getItem('eid'))
             setIsLoggedIn(true);
 
         if(secureLocalStorage.getItem('username'))
@@ -84,8 +92,26 @@ export default function Banner() {
                 {!isLoggedIn ?
                     <div className='login-container'>
                         <div className='login-input-container'>
-                            <input className='login-input' onChange={e => setUsername(e.target.value)} placeholder='Username/Email' type='text' value={username}></input>
-                            <input className='login-input' onChange={e => setPassword(e.target.value)} placeholder='Password' type='password' value={password}></input>
+                            <input
+                                className='login-input'
+                                onChange={e => {
+                                    setUsername(e.target.value);
+                                    window.localStorage.setItem('username', e.target.value);
+                                }}
+                                placeholder='Username/Email'
+                                type='text'
+                                value={username}
+                            />
+                            <input
+                                className='login-input'
+                                onChange={e => {
+                                    setPassword(e.target.value);
+                                    window.localStorage.setItem('password', e.target.value);
+                                }}
+                                placeholder='Password'
+                                type='password'
+                                value={password}
+                            />
                         </div>
 
                         <div className='login-button-container'>
@@ -95,7 +121,17 @@ export default function Banner() {
                     </div> :
 
                     <div className='login-container'>
-                        <button className='login-button' onClick={() => {/*navigate('/restaurant-manager')*/redirect('/RestaurantManager')}}>{username}</button>
+                        <button
+                            className='login-button'
+                            onClick={() => {
+                                if(secureLocalStorage.getItem('uid'))
+                                    redirect('/RestaurantManager');
+                                else
+                                    redirect('/Administrator');
+                            }}
+                        >
+                            {username}
+                        </button>
                         <button className='login-button' onClick={logoutUser}>Log Out</button>
                     </div>
                 }

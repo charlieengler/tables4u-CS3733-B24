@@ -36,6 +36,16 @@ export default function RestaurantDetails(props: any) {
 
         if(props.zipcode)
             setZipcode(props.zipcode);
+
+        if(window.localStorage.getItem('username')) {
+            setUsername(window.localStorage.getItem('username') as string);
+            window.localStorage.removeItem('username');
+        }
+
+        if(window.localStorage.getItem('password')) {
+            setPassword(window.localStorage.getItem('password') as string);
+            window.localStorage.removeItem('password');
+        }
     }, []);
 
     return (
