@@ -77,7 +77,7 @@ export default function Banner() {
 
     useEffect(() => {
         // TODO: Make sure the restaurant manager is saved in secureLocalStorage
-        if(secureLocalStorage.getItem('uid'))
+        if(secureLocalStorage.getItem('eid'))
             setIsLoggedIn(true);
 
         if(secureLocalStorage.getItem('username'))
@@ -92,8 +92,26 @@ export default function Banner() {
                 {!isLoggedIn ?
                     <div className='login-container'>
                         <div className='login-input-container'>
-                            <input className='login-input' onChange={e => setUsername(e.target.value)} placeholder='Username/Email' type='text' value={username}></input>
-                            <input className='login-input' onChange={e => setPassword(e.target.value)} placeholder='Password' type='password' value={password}></input>
+                            <input
+                                className='login-input'
+                                onChange={e => {
+                                    setUsername(e.target.value);
+                                    window.localStorage.setItem('username', e.target.value);
+                                }}
+                                placeholder='Username/Email'
+                                type='text'
+                                value={username}
+                            />
+                            <input
+                                className='login-input'
+                                onChange={e => {
+                                    setPassword(e.target.value);
+                                    window.localStorage.setItem('password', e.target.value);
+                                }}
+                                placeholder='Password'
+                                type='password'
+                                value={password}
+                            />
                         </div>
 
                         <div className='login-button-container'>
@@ -103,7 +121,17 @@ export default function Banner() {
                     </div> :
 
                     <div className='login-container'>
-                        <button className='login-button' onClick={() => {/*navigate('/restaurant-manager')*/redirect('/RestaurantManager')}}>{username}</button>
+                        <button
+                            className='login-button'
+                            onClick={() => {
+                                if(secureLocalStorage.getItem('uid'))
+                                    redirect('/RestaurantManager');
+                                else
+                                    redirect('/Administrator');
+                            }}
+                        >
+                            {username}
+                        </button>
                         <button className='login-button' onClick={logoutUser}>Log Out</button>
                     </div>
                 }

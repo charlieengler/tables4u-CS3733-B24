@@ -142,9 +142,15 @@ export default function RestaurantManager() {
         }
     }
 
-    const updateSchedule = async (sid: number, opening: number, closing: number) => {
+    const updateSchedule = async (sid: number, opening: number, closing: number, scheduleIndex: number) => {
         try {
-            await updateScheduleTimes(sid, opening, closing);
+            const newSchedule = await updateScheduleTimes(sid, opening, closing) as any;
+            const tempSchedules = schedules as any[];
+
+            tempSchedules[scheduleIndex].opening = newSchedule.opening;
+            tempSchedules[scheduleIndex].closing = newSchedule.closing;
+
+            setSchedules(tempSchedules);
         } catch(err) {
             console.error(err);
         }
@@ -239,26 +245,24 @@ export default function RestaurantManager() {
                 <div className='restaurant-data-container'>
                     <input className='restaurant-data-date-input' onChange={e => genReport(uid as number, e.target.value)} type='date'/>
                     <div className='restaurant-data'>
-                        <div className='restaurant-data-timeslot'>
-                            {reservations && tables && utilizations && reservations.map((reservation, i) => {
-                                return (
-                                    <div key={i.toString() + '-data'}>
-                                        {(reservation as any[]).map((res, j) => {
-                                            return (
-                                                <div key={j.toString() + '-data-timeslot'}>
-                                                    {j == 0 ? 
-                                                        <>{res}</>
-                                                        :
-                                                        <div className={res ? 'restaurant-data-table-reserved' : 'restaurant-data-table'}>{tables[j-1].seats}</div>
-                                                    }
-                                                </div>
-                                            );
-                                        })}
-                                        <div className='restaurant-data-utilization'>{utilizations[i]}%</div>
-                                    </div>
-                                );
-                            })}
-                        </div>
+                        {reservations && tables && utilizations && reservations.map((reservation, i) => {
+                            return (
+                                <div className='restaurant-data-timeslot' key={i.toString() + '-data'}>
+                                    {(reservation as any[]).map((res, j) => {
+                                        return (
+                                            <div key={j.toString() + '-data-timeslot'}>
+                                                {j == 0 ? 
+                                                    <>{res}</>
+                                                    :
+                                                    <div className={res ? 'restaurant-data-table-reserved' : 'restaurant-data-table'}>{tables[j-1].seats}</div>
+                                                }
+                                            </div>
+                                        );
+                                    })}
+                                    <div className='restaurant-data-utilization'>{utilizations[i]}%</div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
                 
@@ -305,8 +309,8 @@ export default function RestaurantManager() {
                 </div>
 
                 <div className='restaurant-status-container'>
-                    <button className='restaurant-status-edit-details' onClick={() => setIsEditingDetails(true)}>Edit Details</button>
-                    <button className='restaurant-status-activate' onClick={() => activate(uid as number)}>{isActive ? 'Deactivate' : 'Activate'} Restaurant</button>
+                    <button className='restaurant-status-edit-details' disabled={isActive} onClick={() => setIsEditingDetails(true)}>Edit Details</button>
+                    <button className='restaurant-status-activate' disabled={isActive} onClick={() => activate(uid as number)}>{isActive ? 'Already Active' : 'Activate'} Restaurant</button>
                     <button className='restaurant-status-delete' onClick={() => deleteRes(uid as number)}>Delete Restaurant</button>
                 </div>
 
@@ -316,8 +320,8 @@ export default function RestaurantManager() {
                             return (
                                 <div className='restaurant-schedule-day-container' key={index.toString() + '-schedule-days'}>
                                     <div className='restaurant-schedule-day'>{day}</div>
-                                    <input className='restaurant-schedule-timeslot' defaultValue={schedules[index].opening} onChange={e => updateSchedule(schedules[index].sid, Number(e.target.value), schedules[index].closing)} type='number'/>
-                                    <input className='restaurant-schedule-timeslot' defaultValue={schedules[index].closing} onChange={e => updateSchedule(schedules[index].sid, schedules[index].opening, Number(e.target.value))} type='number'/>
+                                    <input className='restaurant-schedule-timeslot' defaultValue={schedules[index].opening} disabled={isActive} onChange={e => updateSchedule(schedules[index].sid, Number(e.target.value), schedules[index].closing, index)} type='number'/>
+                                    <input className='restaurant-schedule-timeslot' defaultValue={schedules[index].closing} disabled={isActive} onChange={e => updateSchedule(schedules[index].sid, schedules[index].opening, Number(e.target.value), index)} type='number'/>
                                 </div>
                             );
                         })}
@@ -328,7 +332,7 @@ export default function RestaurantManager() {
                             return (
                                 <div className='restaurant-schedule-table-count-container' key={index.toString() + '-schedule-tables'}>
                                     <div className='restaurant-schedule-table-occupancy'>{count + " seater:"}</div>
-                                    <input className='restaurant-schedule-table-count' defaultValue={tableCounts[index]} onChange={e => updateTable(count, Number(e.target.value), uid as number)} type='number'/>
+                                    <input className='restaurant-schedule-table-count' defaultValue={tableCounts[index]} disabled={isActive} onChange={e => updateTable(count, Number(e.target.value), uid as number)} type='number'/>
                                 </div>
                             );
                         })}

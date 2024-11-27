@@ -6,8 +6,11 @@ export function createRestaurant(email: string, username: string, password: stri
     return new Promise((resolve, reject) => {
         const instance = createInstance('https://h3q7tcd7ji.execute-api.us-east-2.amazonaws.com/Development');
 
-        const city = cityState.split(',')[0];
-        const state = cityState.split(', ')[1];
+        let city = cityState.split(' ')[0];
+        city = city.slice(0, city.length - 1);
+        let state = cityState.split(' ')[1];
+        if(state.length > 2)
+            state = state.slice(0, 2);
 
         instance.post('/create-restaurant', {
             email: email,
@@ -213,9 +216,13 @@ export function updateScheduleTimes(sid: number, opening: number, closing: numbe
 
         instance.post('/set-restaurant/schedule', {sid: sid, opening: opening, closing: closing}).then(res => {
             if(res.data.statusCode == 200) {
-                const status = res.data.body.message;
+                const opening = res.data.body.opening;
+                const closing = res.data.body.closing;
 
-                resolve(status);
+                resolve({
+                    opening: opening,
+                    closing: closing,
+                });
             } else {
                 const error = res.data.body.error;
 
@@ -247,6 +254,7 @@ export function updateTableCount(seatCount: number, numTables: number, uid: numb
         });
     });
 }
+
 export function listRestaurants() {
     return new Promise((resolve, reject) => {
         const instance = createInstance('https://h3q7tcd7ji.execute-api.us-east-2.amazonaws.com/Development');

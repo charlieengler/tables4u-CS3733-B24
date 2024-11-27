@@ -83,6 +83,7 @@ export default function Administrator() {
         }
         
         getAccessLevel();
+        listRest();
     }, []);
 
     return (

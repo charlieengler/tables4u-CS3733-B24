@@ -63,6 +63,7 @@ export function logout() {
             secureLocalStorage.removeItem('token');
             secureLocalStorage.removeItem('uid');
             secureLocalStorage.removeItem('username');
+            secureLocalStorage.removeItem('eid');
 
             resolve('Successfully logged out.');
         } catch (err) {
