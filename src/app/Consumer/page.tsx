@@ -93,7 +93,7 @@ export default function Consumer() {
                             {option}
                         </option>
                 ))}</select>
-                <button className='search-button' onClick={findRes}>Search - Doesn't work yet</button>
+                <button className='search-button' onClick={findRes}>Search - Does not work yet</button>
             </div>
 
             <div className='restaurant-container'>
