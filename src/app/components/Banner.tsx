@@ -79,6 +79,8 @@ export default function Banner() {
         // TODO: Make sure the restaurant manager is saved in secureLocalStorage
         if(secureLocalStorage.getItem('eid'))
             setIsLoggedIn(true);
+        else
+            setIsLoggedIn(false);
 
         if(secureLocalStorage.getItem('username'))
             setUsername(secureLocalStorage.getItem('username') as string);

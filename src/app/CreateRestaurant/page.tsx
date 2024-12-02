@@ -16,9 +16,11 @@ function CreateRestaurant() {
 
         try {
             const resDetails = await createRestaurant(email, username, password, name, address, cityState, zipcode) as any;
+            console.log(resDetails);
 
             secureLocalStorage.setItem('eid', resDetails.eid);
             secureLocalStorage.setItem('username', resDetails.username);
+            secureLocalStorage.setItem('uid', resDetails.uid);
         } catch (err) {
             console.error(err);
         } finally {
