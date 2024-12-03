@@ -47,8 +47,7 @@ export default function Consumer() {
                 setRestaurantTimes(prevTimes => ({
                     ...prevTimes,
                     [restaurant]: times,
-                }));
-                console.log(restaurantTimes)    
+                })); 
             }
             catch (err){
                 console.log(err)
@@ -79,6 +78,15 @@ export default function Consumer() {
         }
     }
 
+    const getRestaurantTime = (restaurant: string) => {
+        const timeArray = restaurantTimes[restaurant]
+        if(timeArray != undefined){
+            return timeArray.times
+        }
+
+        return "hi"
+    }
+
     return (
         <>
             <Banner/>
@@ -93,13 +101,15 @@ export default function Consumer() {
                             {option}
                         </option>
                 ))}</select>
-                <button className='search-button' onClick={findRes}>Search - Does not work yet</button>
+                <button className='search-button' onClick={findTables}>Search - Does not work yet</button>
             </div>
 
             <div className='restaurant-container'>
                 {restaurantList.length > 0 ? restaurantList.map((restaurant, index) => (
                     <div key={index} className="restaurant-item">
-                        {restaurant}
+                        {restaurant} <br/>
+                        {getRestaurantTime(restaurant)}
+                        {/* {restaurantTimes["My Restaurant"]} */}
                     </div>
                 )) : <div>Loading Restaurants...</div>}
             </div>

@@ -75,11 +75,8 @@ export function searchAvailabilityRestaurant(restaurant: String, date: String) {
         const instance = createInstance('https://nlujztvubh.execute-api.us-east-2.amazonaws.com/Consumer-1');
 
         instance.post('/search-availability-restaurant', {restaurantName: restaurant, date: date}).then(res => {
-            console.log(restaurant)
-            console.log(date)
             if(res.data.statusCode == 200) {
                 const times = res.data.result.availableTimes
-                console.log(times)
                 resolve({
                     times: times
                 });
