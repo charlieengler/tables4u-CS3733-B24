@@ -1,52 +1,165 @@
-.restaurant-closings-container {
-    grid-column-start: 3;
-    grid-column-end: 3;
-    grid-row-start: 1;
-    grid-row-end: 1;
-}
+@import url('../globals.css');
 
 .restaurant-container {
-    display: grid;
-    grid-template-columns: 25% 25% 25% 25%;
-    grid-template-rows: calc(100%/3) calc(100%/3) calc(100%/3);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 90vh;
+    width: 100vw;
 }
 
 .restaurant-data-container {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 1;
-    grid-row-end: 3;
-    width: 100%;
+    background-color: var(--tertiary);
+    border-radius: var(--border-radius);
+    flex: 1;
+    font-size: 20px;
+    height: 92%;
+    overflow-y: scroll;
+    padding-bottom: 15px;
 }
+
+    .restaurant-data {
+        border-radius: var(--border-radius);
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 20px;
+        padding-bottom: 20px;
+        padding-top: 20px;
+        width: calc(100% - 30px);
+    }
+
+    .restaurant-data-date-input {
+        margin-left: calc(50% - 150px);
+        margin-right: calc(50% - 150px);
+        margin-top: 15px !important;
+        width: 300px !important;
+    }
+
+    .restaurant-data-table {
+        background-color: var(--success);
+        border-radius: 5px;
+        box-shadow: var(--box-shadow);
+        margin-left: 5px;
+        margin-right: 5px;
+        margin-top: 2px;
+        padding: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+        width: fit-content;
+    }
+
+        .reserved {
+            background-color: var(--error);
+        }
+
+    .restaurant-data-table-time {
+        background-color: var(--secondary);
+        border-radius: 5px;
+        box-shadow: var(--box-shadow);
+        font-weight: 600;
+        margin-bottom: 10px;
+        margin-right: 10px;
+        padding: 7px;
+        padding-right: 10px;
+        text-align: center;
+        width: 7%;
+    }
 
     .restaurant-data-timeslot {
-        display: inline-block;
-        width: 20%;
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+        margin-top: 5px;
+        width: 93%;
     }
 
-.restaurant-schedule-container {
-    grid-column-start: 3;
-    grid-column-end: 4;
-    grid-row-start: 2;
-    grid-row-end: 3;
+    .restaurant-data-timeslot-container {
+        margin-left: auto;
+        margin-right: auto;
+        width: 95%;
+    }
+
+    .restaurant-data-utilization {
+        float: right;
+        padding: 5px;
+    }
+    
+.restaurant-controls-container {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
-
-    .restaurant-schedule-day-container {
-        display: inline-block;
-        width: calc(80%/7);
-    }
-
-    .restaurant-schedule-tables-container {
+    .restaurant-closings-container {
+        align-items: flex-start;
+        background-color: var(--tertiary);
+        border-radius: var(--border-radius);
+        display: flex;
         width: 100%;
     }
 
+        .restaurant-closings-date-container {
+            display: flex;
+            flex-direction: row;
+            flex: 1;
+        }
+
+            .restaurant-closings-add {
+                background-color: var(--success);
+                height: 35px;
+                text-align: center;
+                width: 35px;
+            }
+
+                .restaurant-closings-add-text {
+                    font-size: 12px;
+                    font-weight: 700;
+                    text-align: center;
+                    transform: translateY(-2.5px) scale(2);
+                }
+
+            .restaurant-closings-date {
+                height: 35px;
+                max-width: fit-content;
+            }
+
+            .restaurant-closings-delete {
+                background-color: var(--error);
+                height: 35px;
+                text-align: center;
+                width: 35px;
+            }
+
+                .restaurant-closings-delete-text {
+                    color: var(--background);
+                    font-size: 12px;
+                    font-weight: 700;
+                    text-align: center;
+                    transform: translateY(-2.5px) scale(2);
+                }
+
+    .restaurant-schedule-container {
+        display: flex;
+        width: 100%;
+    }
+
+        .restaurant-schedule-day-container {
+            flex: 1;
+        }
+
+        .restaurant-schedule-tables-container {
+            width: 100%;
+        }
+
 .restaurant-status-container {
-    grid-column-start: 4;
-    grid-column-end: 4;
-    grid-row-start: 1;
-    grid-row-end: 1;
+    border: 1px solid black;
 }
 
 .restaurant-title {
+    font-size: 48px;
+    font-weight: 600;
+    height: 100px;
+    padding-top: 20px;
     text-align: center;
+    text-decoration: underline;
 }
