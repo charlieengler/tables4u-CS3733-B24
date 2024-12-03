@@ -1,6 +1,5 @@
-import secureLocalStorage from 'react-secure-storage';
-
 import createInstance from "./instance";
+import { logout } from "./user";
 
 export function createRestaurant(email: string, username: string, password: string, restaurantName: string, address: string, cityState: string, zipcode: string) {
     return new Promise((resolve, reject) => {
@@ -23,17 +22,7 @@ export function createRestaurant(email: string, username: string, password: stri
             zipcode: zipcode,
         }).then(res => {
             if(res.data.statusCode == 200) {
-                const resUsername = res.data.body.username;
-                const resRestaurantName = res.data.body.restaurantName;
-                const resUid = res.data.body.uid;
-
-                secureLocalStorage.setItem('uid', Number(resUid));
-
-                resolve({
-                    username: resUsername,
-                    restaurantName: resRestaurantName,
-                    uid: resUid,
-                });
+                resolve(res.data.body);
             } else {
                 const error = res.data.body.error;
 
@@ -50,11 +39,14 @@ export function deleteRestaurant(uid: number | string) {
         const instance = createInstance('https://h3q7tcd7ji.execute-api.us-east-2.amazonaws.com/Development');
 
         // TODO: Should probably check to make sure the person deleting it has the proper credentials
-        instance.post('/delete-restaurant', {restaurant: uid}).then(res => {
-            if(res.data.statusCode == 200)
+        instance.post('/delete-restaurant', {restaurant: uid}).then(async res => {
+            if(res.data.statusCode == 200) {
+                await logout();
+
                 resolve('Successfully deleted restaurant.');
-            else
+            } else {
                 reject(res.data.body.error);
+            }
         }).catch(err => {
             reject(err);
         });
