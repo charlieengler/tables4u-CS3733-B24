@@ -1,6 +1,6 @@
 'use client';
 
-import { createRef, useEffect, useState } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 // import { useRouter } from 'next/router';
 import { redirect } from 'next/navigation';
@@ -159,9 +159,8 @@ export default function RestaurantManager() {
         try {
             const newTables = await updateTableCount(seatCount, numTables, uid);
 
-            setTables(newTables as any[]);
-
             calcTableCounts(newTables as any[]);
+            setTables(newTables as any[]);
         } catch(err) {
             console.error(err);
         }
@@ -227,113 +226,117 @@ export default function RestaurantManager() {
         <>
             <Banner/>
             <div className='restaurant-title'>{restaurantName}</div>
-            {isEditingDetails && <div className='restaurant-details-container'>
-                <RestaurantDetails
-                    address={address}
-                    callback={updateDetails}
-                    cityState={city + ', ' + state}
-                    email={email}
-                    name={restaurantName}
-                    username={username}
-                    zipcode={zipcode}
-                />
-            </div>}
-
+            <div className='restaurant-status-container'>
+                <button className='restaurant-status-edit-details' disabled={isActive} onClick={() => setIsEditingDetails(true)}>Edit Details</button>
+                <button className='restaurant-status-activate' disabled={isActive} onClick={() => activate(uid as number)}>{isActive ? 'Already Active' : 'Activate'} Restaurant</button>
+                <button className='restaurant-status-delete' onClick={() => deleteRes(uid as number)}>Delete Restaurant</button>
+            </div>
             <div className='restaurant-container'>
+                {isEditingDetails && <div className='restaurant-details-container'>
+                    <RestaurantDetails
+                        address={address}
+                        callback={updateDetails}
+                        cityState={city + ', ' + state}
+                        email={email}
+                        name={restaurantName}
+                        username={username}
+                        zipcode={zipcode}
+                    />
+                </div>}
+
                 <div className='restaurant-data-container'>
                     <input className='restaurant-data-date-input' onChange={e => genReport(uid as number, e.target.value)} type='date'/>
                     <div className='restaurant-data'>
                         {reservations && tables && utilizations && reservations.map((reservation, i) => {
+                            const resString = (reservation[0] as number).toString();
+                            const time = resString.substring(0, Math.floor(resString.length/2)) + ":" + resString.substring(Math.floor(resString.length/2), resString.length);
+
                             return (
-                                <div className='restaurant-data-timeslot' key={i.toString() + '-data'}>
-                                    {(reservation as any[]).map((res, j) => {
-                                        return (
-                                            <div key={j.toString() + '-data-timeslot'}>
-                                                {j == 0 ? 
-                                                    <>{res}</>
-                                                    :
-                                                    <div className={res ? 'restaurant-data-table-reserved' : 'restaurant-data-table'}>{tables[j-1].seats}</div>
-                                                }
-                                            </div>
-                                        );
-                                    })}
-                                    <div className='restaurant-data-utilization'>{utilizations[i]}%</div>
+                                <div className='restaurant-data-timeslot-container' key={i.toString() + '-data'}>
+                                    <div className='restaurant-data-table-time'>{time}</div>
+
+                                    <div className='restaurant-data-timeslot'>
+                                        {(reservation as any[]).map((res, j) => {
+                                            return (
+                                                <div key={j.toString() + '-data-timeslot'}>
+                                                    {j > 0 && <div className={'restaurant-data-table' + (res ? ' reserved' : '')}>{tables[j-1].seats}</div>}
+                                                </div>
+                                            );
+                                        })}
+                                        <div className='restaurant-data-utilization'>{utilizations[i]}%</div>
+                                    </div>
                                 </div>
                             );
                         })}
                     </div>
                 </div>
-                
-                <div className='restaurant-closings-container'>
-                    {closings && closings.map((closing, index) => {
-                        return (
-                            <div key={index.toString() + '-closings'}>
-                                <input className='restaurant-closing-date' readOnly type='date' value={closing}/>
-                                <button
-                                    className='restaurant-closing-delete'
-                                    onClick={() => {
-                                        const tempClosings = closings;
 
-                                        tempClosings.splice(index, 1);
+                <div className='restaurant-controls-container'>
+                    <div className='restaurant-closings-container'>
+                        {closings && closings.map((closing, index) => {
+                            return (
+                                <div className='restaurant-closings-date-container' key={index.toString() + '-closings'}>
+                                    <input className='restaurant-closings-date' readOnly type='date' value={closing}/>
+                                    <button
+                                        className='restaurant-closings-delete'
+                                        onClick={() => {
+                                            const tempClosings = closings;
 
-                                        updateClosings(uid as number, tempClosings);
-                                    }}
-                                >
-                                    Delete
-                                </button>
+                                            tempClosings.splice(index, 1);
+
+                                            updateClosings(uid as number, tempClosings);
+                                        }}
+                                    >
+                                        <div className='restaurant-closings-delete-text'>&#215;</div>
+                                    </button>
+                                </div>
+                            );
+                        })}
+
+                        {closings && 
+                            <div className='restaurant-closings-container'>
+                                <input className='restaurant-closings-date' ref={newClosingDateRef} type='date'/>
+                                    <button
+                                        className='restaurant-closings-add'
+                                        onClick={() => {
+                                            if(newClosingDateRef.current == null)
+                                                return;
+
+                                            const tempClosings = closings;
+                                            tempClosings.push(newClosingDateRef.current.value);
+
+                                            updateClosings(uid as number, tempClosings);
+                                        }}
+                                    >
+                                        <div className='restaurant-closings-add-text'>+</div>
+                                    </button>
                             </div>
-                        );
-                    })}
+                        }
+                    </div>
 
-                    {closings && 
-                        <>
-                            <input className='restaurant-closing-date' ref={newClosingDateRef} type='date'/>
-                                <button
-                                    className='restaurant-closing-add'
-                                    onClick={() => {
-                                        if(newClosingDateRef.current == null)
-                                            return;
+                    <div className='restaurant-schedule-container'>
+                    <h1>Daily Schedules: </h1>
+                            {schedules && days.map((day, index) => {
+                                return (
+                                    <div className='restaurant-schedule-day-container' key={index.toString() + '-schedule-days'}>
+                                        <div className='restaurant-schedule-day'>{day}</div>
+                                        <input className='restaurant-schedule-timeslot' defaultValue={schedules[index].opening} disabled={isActive} onChange={e => updateSchedule(schedules[index].sid, Number(e.target.value), schedules[index].closing, index)} type='number'/>
+                                        <input className='restaurant-schedule-timeslot' defaultValue={schedules[index].closing} disabled={isActive} onChange={e => updateSchedule(schedules[index].sid, schedules[index].opening, Number(e.target.value), index)} type='number'/>
+                                    </div>
+                                );
+                            })}
 
-                                        const tempClosings = closings;
-                                        tempClosings.push(newClosingDateRef.current.value);
-
-                                        updateClosings(uid as number, tempClosings);
-                                    }}
-                                >
-                                    Add
-                                </button>
-                        </>
-                    }
-                </div>
-
-                <div className='restaurant-status-container'>
-                    <button className='restaurant-status-edit-details' disabled={isActive} onClick={() => setIsEditingDetails(true)}>Edit Details</button>
-                    <button className='restaurant-status-activate' disabled={isActive} onClick={() => activate(uid as number)}>{isActive ? 'Already Active' : 'Activate'} Restaurant</button>
-                    <button className='restaurant-status-delete' onClick={() => deleteRes(uid as number)}>Delete Restaurant</button>
-                </div>
-
-                <div className='restaurant-schedule-container'>
-                <h1>Daily Schedules: </h1>
-                        {schedules && days.map((day, index) => {
-                            return (
-                                <div className='restaurant-schedule-day-container' key={index.toString() + '-schedule-days'}>
-                                    <div className='restaurant-schedule-day'>{day}</div>
-                                    <input className='restaurant-schedule-timeslot' defaultValue={schedules[index].opening} disabled={isActive} onChange={e => updateSchedule(schedules[index].sid, Number(e.target.value), schedules[index].closing, index)} type='number'/>
-                                    <input className='restaurant-schedule-timeslot' defaultValue={schedules[index].closing} disabled={isActive} onChange={e => updateSchedule(schedules[index].sid, schedules[index].opening, Number(e.target.value), index)} type='number'/>
-                                </div>
-                            );
-                        })}
-
-                    <h1>Table Counts: </h1>
-                    <div className='restaurant-schedule-tables-container'>
-                        {tableCounts && uid && [1, 2, 3, 4, 5, 6, 7, 8].map((count, index) => {
-                            return (
-                                <div className='restaurant-schedule-table-count-container' key={index.toString() + '-schedule-tables'}>
-                                    <div className='restaurant-schedule-table-occupancy'>{count + " seater:"}</div>
-                                    <input className='restaurant-schedule-table-count' defaultValue={tableCounts[index]} disabled={isActive} onChange={e => updateTable(count, Number(e.target.value), uid as number)} type='number'/>
-                                </div>
-                            );
-                        })}
+                        <h1>Table Counts: </h1>
+                        <div className='restaurant-schedule-tables-container'>
+                            {tableCounts && uid && [1, 2, 3, 4, 5, 6, 7, 8].map((count, index) => {
+                                return (
+                                    <div className='restaurant-schedule-table-count-container' key={index.toString() + '-schedule-tables'}>
+                                        <div className='restaurant-schedule-table-occupancy'>{count + " seater:"}</div>
+                                        <input className='restaurant-schedule-table-count' defaultValue={tableCounts[index]} disabled={isActive} onChange={e => updateTable(count, Number(e.target.value), uid as number)} type='number'/>
+                                    </div>
+                                );
+                            })}
+                        </div>
                     </div>
                 </div>
             </div>
