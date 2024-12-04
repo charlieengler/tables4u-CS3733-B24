@@ -35,15 +35,21 @@ export default function Consumer() {
 
     useEffect(() => {
         const fetchOptions = async () => {
-            const restaurants = await listActiveRestaurants();
-            setRestaurantList(restaurants);
+            try{
+                const restaurants = await listActiveRestaurants();
+                setRestaurantList(restaurants);
+            }
+            catch{
+                showNotification("No Active Restaurants", 10000)
+            }
+            
         };
         fetchOptions();
     }, []);
 
     const findTables = async () => {
         if (restaurant == '') { //search all restaurants
-
+            showNotification("No Active Restaurants", 5000)
         }
         else {   //search given restaurant
             try {
@@ -54,6 +60,7 @@ export default function Consumer() {
                 }));
             }
             catch (err) {
+                showNotification("No Available Tables", 5000)
                 console.log(err)
             }
         }
@@ -65,6 +72,7 @@ export default function Consumer() {
             setReservation(resData)
         }
         catch (err) {
+            showNotification("Reservation Doesn't Exist", 5000)
             setReservation(null)
         }
     }
@@ -75,7 +83,7 @@ export default function Consumer() {
                 console.log(reservation.confCode)
                 await cancelReservation(reservation.confCode)
                 setReservation(null)
-                showNotification("Cancelled", 2000)
+                showNotification("Cancelled", 5000)
             }
         }
         catch (err) {
@@ -110,10 +118,10 @@ export default function Consumer() {
         if(date != "" && time != "" && guests != "" && restaurant != "" && email != ""){
             const confCode = await createReservation(date, time, guests, restaurant, email) as string
             setConfCode(confCode.confCode)
-            alert("Confirmed. Confirmation Code: " + confCode.confCode)
+            showNotification("Confirmed. Confirmation Code: " + confCode.confCode, 5000)
         }
         else{
-            alert("Please fill all fields")
+            showNotification("Please fill all fields", 5000)
         }
     }
 
@@ -123,7 +131,7 @@ export default function Consumer() {
             <div className='search-container'>
                 <input className='search-input' onChange={e => setDate(e.target.value)} placeholder="Date: YYYY-MM-DD" type="text" value={date}></input>
                 <input className='search-input' onChange={e => setTime(e.target.value)} placeholder="Time: 24HR" type="text" value={time}></input>
-                <input className='search-input' onChange={e => setGuests(e.target.value)} placeholder="Guests" type="text" value={guests}></input>
+                <input className='search-input' onChange={e => setGuests(e.target.value)} placeholder="Number of Guests" type="text" value={guests}></input>
                 <input className='search-input' onChange={e => setEmail(e.target.value)} placeholder="Email" type="text" value={email}></input>
                 <select className='dropdown' onChange={e => setRestaurant(e.target.value)} value={restaurant}>
                     <option value="" disabled>Select a Restaurant</option>
@@ -132,7 +140,7 @@ export default function Consumer() {
                             {option}
                         </option>
                     ))}</select>
-                <button className='search-button' onClick={findTables}>Search - Does not work yet</button>
+                <button className='search-button' onClick={findTables}>Search</button>
             </div>
 
             
@@ -165,9 +173,9 @@ export default function Consumer() {
                 </div>
                 <button className='find-reservation-button' onClick={findRes}>Find Reservation</button>
                 <button className='cancel-reservation-button' onClick={cancelRes}>Cancel Reservation</button>
-                <NotificationBox visible={visible} text={text} />
+                
             </div>
-
+            <NotificationBox visible={visible} text={text} />
 
 
         </>

@@ -50,16 +50,3 @@ input[type=text] {
     padding-right: 10px;
     width: 100%;
 }
-
-.notification {
-    /* z-index to show it on top of other elements if you have other modals. */
-    z-index: 100;
-    position: fixed;
-    bottom: 1rem;
-    left: 1rem;
-    width: 20%;
-    height: 8vh;
-  
-    background-color: gray;
-    color: white;
-  }
