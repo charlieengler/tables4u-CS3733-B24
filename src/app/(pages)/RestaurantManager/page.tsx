@@ -1,12 +1,12 @@
-'use client';
+'use client'
 
 import React, { createRef, useEffect, useState } from 'react';
 import { redirect } from 'next/navigation';
 
 import secureLocalStorage from 'react-secure-storage';
 
-import Banner from '../components/Banner';
-import RestaurantDetails from '../components/RestaurantDetails';
+import Banner from '../../components/Banner';
+import RestaurantDetails from '../../components/RestaurantDetails';
 
 import {
     deleteRestaurant,
@@ -18,11 +18,11 @@ import {
     updateRestaurantDetails,
     updateScheduleTimes,
     updateTableCount
-} from '../routes/restaurants';
+} from '../../routes/restaurants';
 
-import { getUserById } from '../routes/user';
+import { getUserById } from '../../routes/user';
 
-import '../page-styles/RestaurantManager.css';
+import styles from '../styles/RestaurantManager.module.css';
 
 export default function RestaurantManager() {
     const days = ['M', 'T', 'W', 'R', 'F', 'S', 'S'];
@@ -244,18 +244,18 @@ export default function RestaurantManager() {
     return (
         <>
             <Banner/>
-            <div className='restaurant-title'>{restaurantName}</div>
-            <div className='restaurant-status-container'>
-                <button className='restaurant-status-button' disabled={isActive} onClick={() => setIsEditingDetails(!isEditingDetails)}>Details</button>
-                <button className='restaurant-status-button success' disabled={isActive} onClick={() => activate(uid as number)}>{isActive ? 'Already Active' : 'Activate'}</button>
-                <button className='restaurant-status-button error' onClick={() => deleteRes(uid as number)}>Delete</button>
+            <div className={styles.restaurantTitle}>{restaurantName}</div>
+            <div className={styles.restaurantStatusContainer}>
+                <button className={styles.restaurantStatusButton} disabled={isActive} onClick={() => setIsEditingDetails(!isEditingDetails)}>Details</button>
+                <button className={`${styles.restaurantStatusButton} success`} disabled={isActive} onClick={() => activate(uid as number)}>{isActive ? 'Already Active' : 'Activate'}</button>
+                <button className={`${styles.restaurantStatusButton} error`} onClick={() => deleteRes(uid as number)}>Delete</button>
             </div>
 
-            <div className='restaurant-container'>
+            <div className={styles.restaurantContainer}>
                 {isEditingDetails && 
-                    <div className='restaurant-details-container'>
-                        <button className='restaurant-details-close' onClick={() => setIsEditingDetails(false)}>
-                            <div className='restaurant-details-close-text'>&#215;</div>
+                    <div className={styles.restaurantDetailsContainer}>
+                        <button className={styles.restaurantDetailsClose} onClick={() => setIsEditingDetails(false)}>
+                            <div className={styles.restaurantDetailsCloseText}>&#215;</div>
                         </button>
                         <RestaurantDetails
                             address={address}
@@ -269,27 +269,27 @@ export default function RestaurantManager() {
                     </div>
                 }
 
-                <div className='restaurant-data-container'>
-                    <div className='restaurant-container-title'>Daily Report</div>
-                    <input className='restaurant-data-date-input' onChange={e => genReport(uid as number, e.target.value)} type='date'/>
-                    <div className='restaurant-data'>
+                <div className={styles.restaurantDataContainer}>
+                    <div className={styles.restaurantContainerTitle}>Daily Report</div>
+                    <input className={styles.restaurantDataDateInput} onChange={e => genReport(uid as number, e.target.value)} type='date'/>
+                    <div className={styles.restaurantData}>
                         {reservations && tables && utilizations && reservations.map((reservation, i) => {
                             const resString = (reservation[0] as number).toString();
                             const time = resString.substring(0, Math.floor(resString.length/2)) + ":" + resString.substring(Math.floor(resString.length/2), resString.length);
 
                             return (
-                                <div className='restaurant-data-timeslot-container' key={i.toString() + '-data'}>
-                                    <div className='restaurant-data-table-time'>{time}</div>
+                                <div className={styles.restaurantDataTimeslotContainer} key={i.toString() + '-data'}>
+                                    <div className={styles.restaurantDataTableTime}>{time}</div>
 
-                                    <div className='restaurant-data-timeslot'>
+                                    <div className={styles.restaurantDataTimeslot}>
                                         {(reservation as any[]).map((res, j) => {
                                             return (
                                                 <div key={j.toString() + '-data-timeslot'}>
-                                                    {j > 0 && <div className={'restaurant-data-table' + (res ? ' reserved' : '')}>{tables[j-1].seats}</div>}
+                                                    {j > 0 && <div className={`${styles.restaurantDataTable} ${(res ? styles.reserved : '')}`}>{tables[j-1].seats}</div>}
                                                 </div>
                                             );
                                         })}
-                                        <div className='restaurant-data-utilization'>{utilizations[i]}%</div>
+                                        <div className={styles.restaurantDataUtilization}>{utilizations[i]}%</div>
                                     </div>
                                 </div>
                             );
@@ -297,15 +297,15 @@ export default function RestaurantManager() {
                     </div>
                 </div>
 
-                <div className='restaurant-controls-container'>
-                    <div className='restaurant-closings-container'>
-                        <div className='restaurant-container-title'>Closings</div>
+                <div className={styles.restaurantControlsContainer}>
+                    <div className={styles.restaurantClosingsContainer}>
+                        <div className={styles.restaurantContainerTitle}>Closings</div>
                         {closings && closings.map((closing, index) => {
                             return (
-                                <div className='restaurant-closings-date-container' key={index.toString() + '-closings'}>
-                                    <input className='restaurant-closings-date' readOnly type='date' value={closing}/>
+                                <div className={styles.restaurantClosingsDateContainer} key={index.toString() + '-closings'}>
+                                    <input className={styles.restaurantClosingsDate} readOnly type='date' value={closing}/>
                                     <button
-                                        className='restaurant-closings-delete'
+                                        className={styles.restaurantClosingsDelete}
                                         onClick={() => {
                                             const tempClosings = closings;
 
@@ -314,16 +314,16 @@ export default function RestaurantManager() {
                                             updateClosings(uid as number, tempClosings);
                                         }}
                                     >
-                                        <div className='restaurant-closings-delete-text'>&#215;</div>
+                                        <div className={styles.restaurantClosingsDeleteText}>&#215;</div>
                                     </button>
                                 </div>
                             );
                         })}
                         {closings && 
-                            <div className='restaurant-closings-date-container'>
-                                <input className='restaurant-closings-date' ref={newClosingDateRef} type='date'/>
+                            <div className={styles.restaurantClosingsDateContainer}>
+                                <input className={styles.restaurantClosingsDate} ref={newClosingDateRef} type='date'/>
                                 <button
-                                    className='restaurant-closings-add'
+                                    className={styles.restaurantClosingsAdd}
                                     onClick={() => {
                                         if(newClosingDateRef.current == null)
                                             return;
@@ -334,26 +334,26 @@ export default function RestaurantManager() {
                                         updateClosings(uid as number, tempClosings);
                                     }}
                                 >
-                                    <div className='restaurant-closings-add-text'>+</div>
+                                    <div className={styles.restaurantClosingsAddText}>+</div>
                                 </button>
                             </div>
                         }
                     </div>
 
-                    <div className='restaurant-schedule-container'>
-                        <div className='restaurant-container-title'>Daily Schedules</div>
-                        <div className='restaurant-schedule-days-container'>
-                            <div className='restaurant-schedule-title-container'>
-                                <div className='restaurant-schedule-title'>Day:</div>
-                                <div className='restaurant-schedule-title'>Open:</div>
-                                <div className='restaurant-schedule-title'>Close:</div>
+                    <div className={styles.restaurantScheduleContainer}>
+                        <div className={styles.restaurantContainerTitle}>Daily Schedules</div>
+                        <div className={styles.restaurantScheduleDaysContainer}>
+                            <div className={styles.restaurantScheduleTitleContainer}>
+                                <div className={styles.restaurantScheduleTitle}>Day:</div>
+                                <div className={styles.restaurantScheduleTitle}>Open:</div>
+                                <div className={styles.restaurantScheduleTitle}>Close:</div>
                             </div>
                             {schedules && updatedSchedules && days.map((day, index) => {
                                 return (
-                                    <div className='restaurant-schedule-day-container' key={index.toString() + '-schedule-days'}>
-                                        <div className='restaurant-schedule-day'>{day}</div>
+                                    <div className={styles.restaurantScheduleDayContainer} key={index.toString() + '-schedule-days'}>
+                                        <div className={styles.restaurantScheduleDay}>{day}</div>
                                         <input
-                                            className='restaurant-schedule-timeslot'
+                                            className={styles.restaurantScheduleTimeslot}
                                             defaultValue={schedules[index].opening}
                                             disabled={isActive}
                                             onChange={e => {
@@ -365,7 +365,7 @@ export default function RestaurantManager() {
                                             type='number'
                                         />
                                         <input
-                                            className='restaurant-schedule-timeslot'
+                                            className={styles.restaurantScheduleTimeslot}
                                             defaultValue={schedules[index].closing}
                                             disabled={isActive}
                                             onChange={e => {
@@ -379,7 +379,7 @@ export default function RestaurantManager() {
 
                                         {updatedSchedules[index] && 
                                             <button
-                                                className='restaurant-schedule-update-timeslot'
+                                                className={styles.restaurantScheduleUpdateTimeslot}
                                                 onClick={async () => {
                                                     await updateSchedule(schedules[index].sid, schedules[index].opening, schedules[index].closing, index);
                                                     // TODO: Check to see if the above function call returned an error before disabling the update button
@@ -396,19 +396,19 @@ export default function RestaurantManager() {
                         </div>
                     </div>
 
-                    <div className='restaurant-tables-container'>
-                        <div className='restaurant-container-title'>Tables</div>
-                        <div className='restaurant-tables-title-container'>
-                            <div className='restaurant-tables-title'>Number of Seats:</div>
-                            <div className='restaurant-tables-title'>Number of Tables:</div>
+                    <div className={styles.restaurantTablesContainer}>
+                        <div className={styles.restaurantContainerTitle}>Tables</div>
+                        <div className={styles.restaurantTablesTitleContainer}>
+                            <div className={styles.restaurantTablesTitle}>Number of Seats:</div>
+                            <div className={styles.restaurantTablesTitle}>Number of Tables:</div>
                         </div>
-                        <div className='restaurant-tables-counts-container'>
+                        <div className={styles.restaurantTablesCountsContainer}>
                             {tableCounts && uid && [1, 2, 3, 4, 5, 6, 7, 8].map((count, index) => {
                                 return (
-                                    <div className='restaurant-tables-count-container' key={index.toString() + '-schedule-tables'}>
-                                        <div className='restaurant-tables-occupancy'>{count}</div>
+                                    <div className={styles.restaurantTablesCountContainer} key={index.toString() + '-schedule-tables'}>
+                                        <div className={styles.restaurantTablesOccupancy}>{count}</div>
                                         <input
-                                            className='restaurant-tables-count'
+                                            className={styles.restaurantTablesCount}
                                             defaultValue={tableCounts[index]}
                                             disabled={isActive}
                                             onChange={e => {
@@ -421,7 +421,7 @@ export default function RestaurantManager() {
 
                                         {updatedTables[index].hasChanged && 
                                             <button
-                                                className='restaurant-tables-update-count'
+                                                className={styles.restaurantTablesUpdateCount}
                                                 onClick={async () => {
                                                     await updateTable(count, updatedTables[index].value, uid as number);
 

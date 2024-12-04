@@ -1,23 +1,18 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { useRouter } from 'next/router';
 import { redirect } from 'next/navigation';
 import secureLocalStorage from 'react-secure-storage';
 
-import { deleteRestaurant, listRestaurants } from '../routes/restaurants';
+import { deleteRestaurant, listRestaurants } from '../../routes/restaurants';
 
-import Banner from '../components/Banner';
+import Banner from '../../components/Banner';
 
-import testAccess from '../routes/test-access';
-import Alert from '../components/Alert';
-import '../page-styles/Admin.css';
+import testAccess from '../../routes/test-access';
+import Alert from '../../components/Alert';
+import '../styles/Admin.css';
 
 export default function Administrator() {
-    // const navigate = useNavigate();
-    // const router = useRouter();
-
     const [createMessage, setCreateMessage] = useState<string | null>(null);
     const [accessLevel, setAccessLevel] = useState("");
     const [restaurantName, setRestaurantName] = useState('');
@@ -73,12 +68,8 @@ export default function Administrator() {
             } finally {
                 if(access == 'M')
                     redirect('/RestaurantManager');
-                    // router.push('/RestaurantManager');
-                    // navigate('/restaurant-manager');
                 else if(access != 'A')
                     redirect('/');
-                    // router.push('/');
-                    // navigate('/');
             }
         }
         
@@ -89,7 +80,6 @@ export default function Administrator() {
     return (
         <>
             <Banner/>
-            {/* {accessLevel == 'A' && <h1>Administrator</h1>} */}
             <div className = 'report-container'>
                 <button className='reload-button' onClick={genReport}>&#x21bb;</button>
             </div>

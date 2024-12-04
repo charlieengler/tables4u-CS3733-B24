@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-import { findReservation, cancelReservation, listActiveRestaurants, searchAvailabilityRestaurant } from '../routes/consumer';
+import { findReservation, cancelReservation, listActiveRestaurants, searchAvailabilityRestaurant } from '../../routes/consumer';
 
-import Banner from '../components/Banner';
+import Banner from '../../components/Banner';
 
-import '../page-styles/Consumer.css';
+import '../styles/Consumer.css';
 
 interface Reservation {
     restaurant: string;
@@ -17,8 +16,6 @@ interface Reservation {
 }
 
 export default function Consumer() {
-    // const navigate = useNavigate();
-
     const [email, setEmail] = useState('')
     const [confCode, setConfCode] = useState('')
     const [reservation, setReservation] = useState<Reservation | null>(null)
