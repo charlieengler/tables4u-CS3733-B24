@@ -5,7 +5,9 @@ import { useEffect, useState } from 'react';
 import { findReservation, cancelReservation, createReservation, listActiveRestaurants, searchAvailabilityRestaurant } from '../routes/consumer';
 
 import Banner from '../components/Banner';
-
+import NotificationBox from '../components/NotificationBox';
+import useNotification from "../components/useNotification";
+import '../components/styles/NotificationBox.css'
 import '../page-styles/Consumer.css';
 
 interface Reservation {
@@ -29,6 +31,7 @@ export default function Consumer() {
     const [restaurantList, setRestaurantList] = useState<string[]>([])
     const [restaurantTimes, setRestaurantTimes] = useState<{ [key: string]: number[] }>({});
     const [selectedTime, setSelectedTime] = useState<{ [key: string]: number | null }>({});
+    const { visible, text, showNotification } = useNotification();
 
     useEffect(() => {
         const fetchOptions = async () => {
@@ -72,6 +75,7 @@ export default function Consumer() {
                 console.log(reservation.confCode)
                 await cancelReservation(reservation.confCode)
                 setReservation(null)
+                showNotification("Cancelled", 2000)
             }
         }
         catch (err) {
@@ -161,6 +165,7 @@ export default function Consumer() {
                 </div>
                 <button className='find-reservation-button' onClick={findRes}>Find Reservation</button>
                 <button className='cancel-reservation-button' onClick={cancelRes}>Cancel Reservation</button>
+                <NotificationBox visible={visible} text={text} />
             </div>
 
 

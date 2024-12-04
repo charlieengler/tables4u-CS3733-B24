@@ -1,0 +1,17 @@
+@import url("../../globals.css");
+
+.notification {
+    /* z-index to show it on top of other elements if you have other modals. */
+    z-index: 100;
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    width: 20%;
+    height: 8vh;
+    border-radius: 20px;
+  
+    background-color: white;
+    border-radius: 2px;
+    border-color: black;
+    color: black;
+  }
