@@ -37,15 +37,15 @@ export const handler = async (event) => {
     }
     let CreateSchedule = (day) => {
         return new Promise((resolve, reject) => {
-            pool.query("INSERT INTO tables4u.Schedules (day, opening, closing) VALUES (?,?,?);", [day, "2024-12-1 08:00:00","2024-12-1 17:00:00"], (error, rows) => {
+            pool.query("INSERT INTO tables4u.Schedules (day, opening, closing) VALUES (?,?,?);", [day, 800,1700], (error, rows) => {
                 if (error) { return reject(error); }
                 return resolve(rows);
             })
         })
     }
-    let CreateRestaurant = (restaurantName, manager, schedule) => {
+    let CreateRestaurant = (restaurantName,address, city, state, zipcode,  manager, schedule) => {
         return new Promise((resolve, reject) => {
-            pool.query("INSERT INTO tables4u.Restaurants (name, schedule_monday, schedule_tuesday, schedule_wednesday, schedule_thursday,schedule_friday, schedule_saturday, schedule_sunday, manager) VALUES (?,?,?,?,?,?,?,?,?);", [restaurantName,schedule-6,schedule-5,schedule-4, schedule-3,schedule-2,schedule-1,schedule,manager], (error, rows) => {
+            pool.query("INSERT INTO tables4u.Restaurants (name, address, city, state, zipcode, schedule_monday, schedule_tuesday, schedule_wednesday, schedule_thursday,schedule_friday, schedule_saturday, schedule_sunday, manager, closings) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);", [restaurantName,address, city, state, zipcode, schedule-6,schedule-5,schedule-4, schedule-3,schedule-2,schedule-1,schedule,manager,"[]"], (error, rows) => {
                 if (error) { return reject(error); }
                 return resolve(rows);
             })
@@ -68,14 +68,15 @@ export const handler = async (event) => {
         }
         let s = await getSchedules()
         s = s[s.length-1]
-        await CreateRestaurant(event.restaurantName,eid, s.sid)
+        await CreateRestaurant(event.restaurantName,event.address, event.city, event.state, event.zipcode, eid, s.sid)
         let uid = await GetRestaurantID(event.restaurantName)
         let response = {
             statusCode: 200,
-            result: {
-              "username" : event.username,
-              "restaurantName" : event.restaurantName,
-              "uid":uid.uid
+            body: {
+              "eid": eid,
+              "username": event.username,
+              "restaurantName": event.restaurantName,
+              "uid": uid.uid
             }
           }
     pool.end()
