@@ -49,7 +49,19 @@ export default function Consumer() {
 
     const findTables = async () => {
         if (restaurant == '') { //search all restaurants
-            showNotification("No Active Restaurants", 5000)
+            for(const currentRestaurant of restaurantList){
+                try {
+                    const times: number[] = await searchAvailabilityRestaurant(currentRestaurant, date) as number[];
+                    setRestaurantTimes(prevTimes => ({
+                        ...prevTimes,
+                        [currentRestaurant]: times,
+                    }));
+                }
+                catch (err) {
+                    showNotification("No Available Tables at " + currentRestaurant, 5000)
+                    console.log(err)
+                }
+            }
         }
         else {   //search given restaurant
             try {
