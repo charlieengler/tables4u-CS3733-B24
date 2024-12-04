@@ -1,8 +1,6 @@
 'use client';
 
 import React, { createRef, useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { useRouter } from 'next/router';
 import { redirect } from 'next/navigation';
 
 import secureLocalStorage from 'react-secure-storage';
@@ -27,15 +25,13 @@ import { getUserById } from '../routes/user';
 import '../page-styles/RestaurantManager.css';
 
 export default function RestaurantManager() {
-    // const navigate = useNavigate();
-    // const router = useRouter();
-
     const days = ['M', 'T', 'W', 'R', 'F', 'S', 'S'];
 
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [closings, setClosings] = useState<string[]>([]);
     const [email, setEmail] = useState('');
+    const [forceRedraw, setForceRedraw] = useState(0);
     const [isEditingDetails, setIsEditingDetails] = useState(false);
     const [isActive, setIsActive] = useState(false);
     const [manager, setManager] = useState<number | null>(null);
@@ -46,6 +42,17 @@ export default function RestaurantManager() {
     const [tables, setTables] = useState<any[]>([]);
     const [tableCounts, setTableCounts] = useState<number[]>([]);
     const [uid, setUid] = useState<number | null>(null);
+    const [updatedSchedules, setUpdatedSchedules] = useState([false, false, false, false, false, false, false]);
+    const [updatedTables, setUpdatedTables] = useState([
+        {value: 0, hasChanged: false},
+        {value: 0, hasChanged: false},
+        {value: 0, hasChanged: false},
+        {value: 0, hasChanged: false},
+        {value: 0, hasChanged: false},
+        {value: 0, hasChanged: false},
+        {value: 0, hasChanged: false},
+        {value: 0, hasChanged: false},
+    ]);
     const [username, setUsername] = useState('');
     const [utilizations, setUtilizations] = useState([]);
     const [zipcode, setZipcode] = useState('');
@@ -63,8 +70,6 @@ export default function RestaurantManager() {
     const deleteRes = async (uid: number) => {
         if(!secureLocalStorage.getItem('eid'))
             return redirect('/');
-            // router.push('/')
-            // navigate('/');
 
         const eid = secureLocalStorage.getItem('eid') as number;
 
@@ -74,24 +79,42 @@ export default function RestaurantManager() {
             console.error(err);
         } finally {
             redirect('/');
-            // router.push('/');
-            // navigate('/');
         }
     }
 
     const genReport = async (uid: number, date: string) => {
         const report = await generateReport(uid, date) as any;
+        const repTables = report.tables;
+        const repReservations = report.reserved;
 
-        setReservations(report.reserved);
-        setTables(report.tables);
+        for(let i = 0; i < repTables.length; i++) {
+            for(let j = 0; j < repTables.length - 1; j++) {
+                const t1 = repTables[i];
+                const t2 = repTables[j];
+
+                if(t1.seats < t2.seats) {
+                    repTables[i] = t2;
+                    repTables[j] = t1;
+
+                    for(let k = 0; k < repReservations.length; k++) {
+                        const r1 = repReservations[k][i+1];
+                        const r2 = repReservations[k][j+1];
+
+                        repReservations[k][i+1] = r2;
+                        repReservations[k][j+1] = r1;
+                    }
+                }
+            }
+        }
+
+        setReservations(repReservations);
+        setTables(repTables);
         setUtilizations(report.utilization);
     }
 
     const activate = async (uid: number) => {
         if(!secureLocalStorage.getItem('eid'))
             return redirect('/');
-            // router.push('/');
-            // navigate('/');
 
         const eid = secureLocalStorage.getItem('eid') as number;
 
@@ -173,15 +196,11 @@ export default function RestaurantManager() {
             setUid(secureLocalStorage.getItem('uid') as number);
         else
             return redirect('/');
-            // router.push('/');
-            // navigate('/');
 
         if(secureLocalStorage.getItem('eid'))
             setManager(secureLocalStorage.getItem('eid') as number);
         else
             return redirect('/');
-            // router.push('/');
-            // navigate('/');
 
         const getRestaurantData = async (uid: number) => {
             const restaurant = await getRestaurantById(uid) as any;
@@ -229,24 +248,31 @@ export default function RestaurantManager() {
             <Banner/>
             <div className='restaurant-title'>{restaurantName}</div>
             <div className='restaurant-status-container'>
-                <button className='restaurant-status-edit-details' disabled={isActive} onClick={() => setIsEditingDetails(true)}>Edit Details</button>
-                <button className='restaurant-status-activate' disabled={isActive} onClick={() => activate(uid as number)}>{isActive ? 'Already Active' : 'Activate'} Restaurant</button>
-                <button className='restaurant-status-delete' onClick={() => deleteRes(uid as number)}>Delete Restaurant</button>
+                <button className='restaurant-status-button' disabled={isActive} onClick={() => setIsEditingDetails(!isEditingDetails)}>Details</button>
+                <button className='restaurant-status-button success' disabled={isActive} onClick={() => activate(uid as number)}>{isActive ? 'Already Active' : 'Activate'}</button>
+                <button className='restaurant-status-button error' onClick={() => deleteRes(uid as number)}>Delete</button>
             </div>
+
             <div className='restaurant-container'>
-                {isEditingDetails && <div className='restaurant-details-container'>
-                    <RestaurantDetails
-                        address={address}
-                        callback={updateDetails}
-                        cityState={city + ', ' + state}
-                        email={email}
-                        name={restaurantName}
-                        username={username}
-                        zipcode={zipcode}
-                    />
-                </div>}
+                {isEditingDetails && 
+                    <div className='restaurant-details-container'>
+                        <button className='restaurant-details-close' onClick={() => setIsEditingDetails(false)}>
+                            <div className='restaurant-details-close-text'>&#215;</div>
+                        </button>
+                        <RestaurantDetails
+                            address={address}
+                            callback={updateDetails}
+                            cityState={city + ', ' + state}
+                            email={email}
+                            name={restaurantName}
+                            username={username}
+                            zipcode={zipcode}
+                        />
+                    </div>
+                }
 
                 <div className='restaurant-data-container'>
+                    <div className='restaurant-container-title'>Daily Report</div>
                     <input className='restaurant-data-date-input' onChange={e => genReport(uid as number, e.target.value)} type='date'/>
                     <div className='restaurant-data'>
                         {reservations && tables && utilizations && reservations.map((reservation, i) => {
@@ -275,6 +301,7 @@ export default function RestaurantManager() {
 
                 <div className='restaurant-controls-container'>
                     <div className='restaurant-closings-container'>
+                        <div className='restaurant-container-title'>Closings</div>
                         {closings && closings.map((closing, index) => {
                             return (
                                 <div className='restaurant-closings-date-container' key={index.toString() + '-closings'}>
@@ -294,47 +321,120 @@ export default function RestaurantManager() {
                                 </div>
                             );
                         })}
-
                         {closings && 
-                            <div className='restaurant-closings-container'>
+                            <div className='restaurant-closings-date-container'>
                                 <input className='restaurant-closings-date' ref={newClosingDateRef} type='date'/>
-                                    <button
-                                        className='restaurant-closings-add'
-                                        onClick={() => {
-                                            if(newClosingDateRef.current == null)
-                                                return;
+                                <button
+                                    className='restaurant-closings-add'
+                                    onClick={() => {
+                                        if(newClosingDateRef.current == null)
+                                            return;
 
-                                            const tempClosings = closings;
-                                            tempClosings.push(newClosingDateRef.current.value);
+                                        const tempClosings = closings;
+                                        tempClosings.push(newClosingDateRef.current.value);
 
-                                            updateClosings(uid as number, tempClosings);
-                                        }}
-                                    >
-                                        <div className='restaurant-closings-add-text'>+</div>
-                                    </button>
+                                        updateClosings(uid as number, tempClosings);
+                                    }}
+                                >
+                                    <div className='restaurant-closings-add-text'>+</div>
+                                </button>
                             </div>
                         }
                     </div>
 
                     <div className='restaurant-schedule-container'>
-                    <h1>Daily Schedules: </h1>
-                            {schedules && days.map((day, index) => {
+                        <div className='restaurant-container-title'>Daily Schedules</div>
+                        <div className='restaurant-schedule-days-container'>
+                            <div className='restaurant-schedule-title-container'>
+                                <div className='restaurant-schedule-title'>Day:</div>
+                                <div className='restaurant-schedule-title'>Open:</div>
+                                <div className='restaurant-schedule-title'>Close:</div>
+                            </div>
+                            {schedules && updatedSchedules && days.map((day, index) => {
                                 return (
                                     <div className='restaurant-schedule-day-container' key={index.toString() + '-schedule-days'}>
                                         <div className='restaurant-schedule-day'>{day}</div>
-                                        <input className='restaurant-schedule-timeslot' defaultValue={schedules[index].opening} disabled={isActive} onChange={e => updateSchedule(schedules[index].sid, Number(e.target.value), schedules[index].closing, index)} type='number'/>
-                                        <input className='restaurant-schedule-timeslot' defaultValue={schedules[index].closing} disabled={isActive} onChange={e => updateSchedule(schedules[index].sid, schedules[index].opening, Number(e.target.value), index)} type='number'/>
+                                        <input
+                                            className='restaurant-schedule-timeslot'
+                                            defaultValue={schedules[index].opening}
+                                            disabled={isActive}
+                                            onChange={e => {
+                                                schedules[index].opening = Number(e.target.value);
+                                                updatedSchedules[index] = true;
+
+                                                setForceRedraw(forceRedraw + 1);
+                                            }}
+                                            type='number'
+                                        />
+                                        <input
+                                            className='restaurant-schedule-timeslot'
+                                            defaultValue={schedules[index].closing}
+                                            disabled={isActive}
+                                            onChange={e => {
+                                                schedules[index].closing = Number(e.target.value);
+                                                updatedSchedules[index] = true;
+
+                                                setForceRedraw(forceRedraw + 1);
+                                            }}
+                                            type='number'
+                                        />
+
+                                        {updatedSchedules[index] && 
+                                            <button
+                                                className='restaurant-schedule-update-timeslot'
+                                                onClick={async () => {
+                                                    await updateSchedule(schedules[index].sid, schedules[index].opening, schedules[index].closing, index);
+                                                    // TODO: Check to see if the above function call returned an error before disabling the update button
+                                                    updatedSchedules[index] = false;
+                                                    setForceRedraw(forceRedraw + 1);
+                                                }}
+                                            >
+                                                Update
+                                            </button>
+                                        }
                                     </div>
                                 );
                             })}
+                        </div>
+                    </div>
 
-                        <h1>Table Counts: </h1>
-                        <div className='restaurant-schedule-tables-container'>
+                    <div className='restaurant-tables-container'>
+                        <div className='restaurant-container-title'>Tables</div>
+                        <div className='restaurant-tables-title-container'>
+                            <div className='restaurant-tables-title'>Number of Seats:</div>
+                            <div className='restaurant-tables-title'>Number of Tables:</div>
+                        </div>
+                        <div className='restaurant-tables-counts-container'>
                             {tableCounts && uid && [1, 2, 3, 4, 5, 6, 7, 8].map((count, index) => {
                                 return (
-                                    <div className='restaurant-schedule-table-count-container' key={index.toString() + '-schedule-tables'}>
-                                        <div className='restaurant-schedule-table-occupancy'>{count + " seater:"}</div>
-                                        <input className='restaurant-schedule-table-count' defaultValue={tableCounts[index]} disabled={isActive} onChange={e => updateTable(count, Number(e.target.value), uid as number)} type='number'/>
+                                    <div className='restaurant-tables-count-container' key={index.toString() + '-schedule-tables'}>
+                                        <div className='restaurant-tables-occupancy'>{count}</div>
+                                        <input
+                                            className='restaurant-tables-count'
+                                            defaultValue={tableCounts[index]}
+                                            disabled={isActive}
+                                            onChange={e => {
+                                                updatedTables[index].value = Number(e.target.value);
+                                                updatedTables[index].hasChanged = true;
+                                                setForceRedraw(forceRedraw + 1);
+                                            }}
+                                            type='number'
+                                        />
+
+                                        {updatedTables[index].hasChanged && 
+                                            <button
+                                                className='restaurant-tables-update-count'
+                                                onClick={async () => {
+                                                    await updateTable(count, updatedTables[index].value, uid as number);
+
+                                                    // TODO: Check to see if the above function call returned an error before disabling the update button
+                                                    updatedTables[index].hasChanged = false;
+                                                    setForceRedraw(forceRedraw + 1);
+                                                }}
+                                            >
+                                                ✓
+                                            </button>
+                                        }
                                     </div>
                                 );
                             })}

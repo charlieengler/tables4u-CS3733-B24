@@ -239,7 +239,6 @@ export function updateTableCount(seatCount: number, numTables: number, uid: numb
         const instance = createInstance('https://h3q7tcd7ji.execute-api.us-east-2.amazonaws.com/Development');
 
         instance.post('/set-restaurant/tables', {seatCount: seatCount, numTables: numTables, uid: uid}).then(res => {
-            console.log(res)
             if(res.data.statusCode == 200) {
                 const tables = res.data.body.tables;
 
