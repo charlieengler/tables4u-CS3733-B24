@@ -25,6 +25,14 @@ let getManager = (uid) => {
       })
   })
 }
+let getSchedules = (uid) => {
+  return new Promise((resolve, reject) => {
+      pool.query("SELECT schedule_monday, schedule_tuesday, schedule_wednesday, schedule_thursday, schedule_friday, schedule_saturday, schedule_sunday FROM tables4u.Restaurants WHERE uid =?;", [uid], (error, rows) => {
+          if (error) { return reject(error); }
+          return resolve(rows[0]);
+      })
+  })
+}
 let deleteTables = (uid) => {
 return new Promise((resolve, reject) => {
     pool.query("DELETE FROM tables4u.Tables WHERE restaurant =?;", [uid], (error, rows) => {
@@ -57,6 +65,14 @@ let deleteManager = (eid) => {
       })
   })
 }
+let deleteSchedule = (sid) => {
+  return new Promise((resolve, reject) => {
+      pool.query("DELETE FROM tables4u.Schedules WHERE sid =?;", [sid], (error, rows) => {
+          if (error) { return reject(error); }
+          return resolve(rows);
+      })
+  })
+}
 let uid = event.restaurant
 if(isNaN(uid)){
   uid = parseInt(event.restaurant)
@@ -74,6 +90,7 @@ if(isNaN(uid)){
   uid = uid[0].uid
 }
 let manager = await getManager(uid)
+let schedules = await getSchedules(uid)
 if(manager==null){
   pool.end();
   return {
@@ -90,6 +107,13 @@ await deleteTables(uid)
 await deleteRestaurant(uid)
 //Delete Manager
 await deleteManager(manager)
+await deleteSchedule(schedules.schedule_monday)
+await deleteSchedule(schedules.schedule_tuesday)
+await deleteSchedule(schedules.schedule_wednesday)
+await deleteSchedule(schedules.schedule_thursday)
+await deleteSchedule(schedules.schedule_friday)
+await deleteSchedule(schedules.schedule_saturday)
+await deleteSchedule(schedules.schedule_sunday)
 pool.end();
 
 return {
