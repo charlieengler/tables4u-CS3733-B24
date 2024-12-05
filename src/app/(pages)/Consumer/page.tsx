@@ -8,7 +8,7 @@ import Banner from '../../components/Banner';
 import NotificationBox from '../../components/NotificationBox';
 import useNotification from "../../components/useNotification";
 import '../components/styles/NotificationBox.css'
-import '../page-styles/Consumer.css';
+import '../styles/Consumer.css';
 
 interface Reservation {
     restaurant: string;
