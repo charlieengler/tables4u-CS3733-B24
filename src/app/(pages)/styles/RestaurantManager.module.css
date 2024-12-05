@@ -1,6 +1,4 @@
-@import url('../globals.css');
-
-.restaurant-container {
+.restaurantContainer {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -11,7 +9,7 @@
     width: calc(100vw - 40px);
 }
 
-    .restaurant-container-title {
+    .restaurantContainerTitle {
         font-size: 24px;
         font-weight: 600;
         margin-bottom: 20px;
@@ -19,7 +17,7 @@
         width: 100%;
     }
         
-    .restaurant-controls-container {
+    .restaurantControlsContainer {
         align-items: flex-start;
         display: flex;
         flex: 1;
@@ -27,7 +25,7 @@
         flex-wrap: wrap;
         height: 100%;
     }
-        .restaurant-closings-container {
+        .restaurantClosingsContainer {
             align-content: flex-start;
             align-items: flex-start;
             background-color: var(--tertiary);
@@ -44,41 +42,41 @@
             width: 100%;
         }
 
-            .restaurant-closings-date-container {
+            .restaurantClosingsDateContainer {
                 display: flex;
                 flex-direction: row;
                 flex: 1;
                 max-width: fit-content;
             }
 
-                .restaurant-closings-add {
+                .restaurantClosingsAdd {
                     background-color: var(--success);
                     height: 35px;
                     text-align: center;
                     width: 35px;
                 }
 
-                    .restaurant-closings-add-text {
+                    .restaurantClosingsAddText {
                         font-size: 12px;
                         font-weight: 700;
                         text-align: center;
                         transform: translateY(-2.5px) scale(2);
                     }
 
-                .restaurant-closings-date {
+                .restaurantClosingsDate {
                     height: 35px;
                     margin-left: 10px;
                     max-width: fit-content;
                 }
 
-                .restaurant-closings-delete {
+                .restaurantClosingsDelete {
                     background-color: var(--error);
                     height: 35px;
                     text-align: center;
                     width: 35px;
                 }
 
-                    .restaurant-closings-delete-text {
+                    .restaurantClosingsDeleteText {
                         color: var(--background);
                         font-size: 12px;
                         font-weight: 700;
@@ -86,7 +84,7 @@
                         transform: translateY(-2.5px) scale(2);
                     }
 
-        .restaurant-data-container {
+        .restaurantDataContainer {
             background-color: var(--tertiary);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
@@ -97,7 +95,7 @@
             padding: 20px;
         }
 
-            .restaurant-data {
+            .restaurantData {
                 border-radius: var(--border-radius);
                 margin-left: auto;
                 margin-right: auto;
@@ -106,14 +104,14 @@
                 width: calc(100% - 30px);
             }
 
-            .restaurant-data-date-input {
+            .restaurantDataDateInput {
                 margin-left: calc(50% - 150px);
                 margin-right: calc(50% - 150px);
                 margin-top: 15px !important;
                 width: 300px !important;
             }
 
-            .restaurant-data-table {
+            .restaurantDataTable {
                 background-color: var(--success);
                 border-radius: 5px;
                 box-shadow: var(--box-shadow);
@@ -131,7 +129,7 @@
                     color: var(--background);
                 }
 
-            .restaurant-data-table-time {
+            .restaurantDataTableTime {
                 background-color: var(--secondary);
                 border-radius: 5px;
                 box-shadow: var(--box-shadow);
@@ -144,25 +142,25 @@
                 text-align: center;
             }
 
-            .restaurant-data-timeslot {
+            .restaurantDataTimeslot {
                 display: flex;
                 flex-wrap: wrap;
                 margin-bottom: 30px;
                 margin-top: 5px;
             }
 
-            .restaurant-data-timeslot-container {
+            .restaurantDataTimeslotContainer {
                 margin-left: auto;
                 margin-right: auto;
                 width: 95%;
             }
 
-            .restaurant-data-utilization {
+            .restaurantDataUtilization {
                 float: right;
                 padding: 5px;
             }
 
-        .restaurant-schedule-container {
+        .restaurantScheduleContainer {
             background-color: var(--tertiary);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
@@ -173,18 +171,18 @@
             width: 100%;
         }
 
-            .restaurant-schedule-days-container {
+            .restaurantScheduleDaysContainer {
                 display: flex;
                 margin-left: auto;
                 margin-right: auto;
                 width: calc(100% - 60px);
             }
 
-                .restaurant-schedule-title-container {
+                .restaurantScheduleTitleContainer {
                     width: 50px;
                 }
 
-                    .restaurant-schedule-title {
+                    .restaurantScheduleTitle {
                         font-weight: 600;
                         height: 35px;
                         line-height: 35px;
@@ -192,14 +190,14 @@
                         margin-top: 5px;
                     }
 
-                .restaurant-schedule-day-container {
+                .restaurantScheduleDayContainer {
                     flex: 1;
                     margin-left: 10px;
                     margin-right: 10px;
                     text-align: center;
                 }
 
-                    .restaurant-schedule-day {
+                    .restaurantScheduleDay {
                         border-bottom: 2px solid var(--text);
                         font-weight: 600;
                         height: 35px;
@@ -208,18 +206,18 @@
                         margin-top: 5px;
                     }
 
-                    .restaurant-schedule-timeslot {
+                    .restaurantScheduleTimeslot {
                         height: 35px;
                         margin-bottom: 5px;
                         margin-top: 5px;
                     }
 
-                    .restaurant-schedule-update-timeslot {
+                    .restaurantScheduleUpdateTimeslot {
                         background-color: var(--success);
                         height: 35px;
                     }
 
-        .restaurant-tables-container {
+        .restaurantTablesContainer {
             background-color: var(--tertiary);
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
@@ -232,18 +230,18 @@
             width: 100%;
         }
 
-            .restaurant-tables-counts-container {
+            .restaurantTablesCountsContainer {
                 display: flex;
                 width: calc(100% - 150px);
             }
 
-                .restaurant-tables-count-container {
+                .restaurantTablesCountContainer {
                     flex: 1;
                     margin-left: 10px;
                     margin-right: 10px;
                 }
 
-                    .restaurant-tables-count {
+                    .restaurantTablesCount {
                         height: 35px;
                         margin-left: 5%;
                         margin-right: 5%;
@@ -251,7 +249,7 @@
                         text-align: center;
                     }
 
-                    .restaurant-tables-occupancy {
+                    .restaurantTablesOccupancy {
                         border-bottom: 2px solid var(--text);
                         font-weight: 600;
                         height: 35px;
@@ -259,28 +257,28 @@
                         text-align: center;
                     }
 
-                    .restaurant-tables-update-count {
+                    .restaurantTablesUpdateCount {
                         background-color: var(--success);
                         height: 35px;
                     }
 
-            .restaurant-tables-title-container {
+            .restaurantTablesTitleContainer {
                 width: 150px;
             }
 
-                .restaurant-tables-title {
+                .restaurantTablesTitle {
                     height: 35px;
                     font-weight: 600;
                     line-height: 35px;
                     margin-bottom: 5px;
                 }
 
-    .restaurant-details-container {
+    .restaurantDetailsContainer {
         flex: 2;
         height: 100%;
     }
 
-        .restaurant-details-close {
+        .restaurantDetailsClose {
             background-color: var(--error);
             height: 50px;
             float: right;
@@ -290,7 +288,7 @@
             width: 50px;
         }
 
-            .restaurant-details-close-text {
+            .restaurantDetailsCloseText {
                 color: var(--background);
                 font-size: 20px;
                 font-weight: 700;
@@ -298,7 +296,7 @@
                 transform: translateY(-2.5px) scale(2);
             }
 
-.restaurant-status-container {
+.restaurantStatusContainer {
     background-color: var(--tertiary);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
@@ -310,7 +308,7 @@
     width: 300px;
 }
     
-    .restaurant-status-button {
+    .restaurantStatusButton {
         box-shadow: var(--box-shadow);
         height: 60px;
         flex: 1;
@@ -320,7 +318,7 @@
         margin-top: auto;
     }
 
-.restaurant-title {
+.restaurantTitle {
     font-size: 48px;
     font-weight: 600;
     height: 100px;

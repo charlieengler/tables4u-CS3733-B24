@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
-import { findReservation, cancelReservation, createReservation, listActiveRestaurants, searchAvailabilityRestaurant } from '../routes/consumer';
+import { findReservation, cancelReservation, createReservation, listActiveRestaurants, searchAvailabilityRestaurant } from '../../routes/consumer';
 
-import Banner from '../components/Banner';
-import NotificationBox from '../components/NotificationBox';
-import useNotification from "../components/useNotification";
-import '../components/styles/NotificationBox.css'
-import '../page-styles/Consumer.css';
+import Banner from '../../components/Banner';
+import NotificationBox from '../../components/NotificationBox';
+import useNotification from "../../components/useNotification";
+import '../../components/styles/NotificationBox.css'
+import '../styles/Consumer.css';
 
 interface Reservation {
     restaurant: string;
@@ -19,8 +19,6 @@ interface Reservation {
 }
 
 export default function Consumer() {
-    // const navigate = useNavigate();
-
     const [email, setEmail] = useState('')
     const [confCode, setConfCode] = useState('')
     const [reservation, setReservation] = useState<Reservation | null>(null)
@@ -106,10 +104,10 @@ export default function Consumer() {
     const getRestaurantTime = (restaurant: string) => {
         const timeArray = restaurantTimes[restaurant]
         if (timeArray != undefined) {
-            return timeArray.times
+            return timeArray;
         }
         else{
-            return []
+            return [];
         }
     }
 
@@ -129,8 +127,8 @@ export default function Consumer() {
     const createResClick = async () => {
         if(date != "" && time != "" && guests != "" && restaurant != "" && email != ""){
             const confCode = await createReservation(date, time, guests, restaurant, email) as string
-            setConfCode(confCode.confCode)
-            showNotification("Confirmed. Confirmation Code: " + confCode.confCode, 5000)
+            setConfCode(confCode)
+            showNotification("Confirmed. Confirmation Code: " + confCode, 5000)
         }
         else{
             showNotification("Please fill all fields", 5000)

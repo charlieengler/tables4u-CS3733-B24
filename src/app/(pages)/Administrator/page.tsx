@@ -5,14 +5,14 @@ import { useEffect, useState } from 'react';
 import { redirect } from 'next/navigation';
 import secureLocalStorage from 'react-secure-storage';
 
-import { deleteRestaurant, listRestaurants, generateReport } from '../routes/restaurants';
-import { cancelReservation } from '../routes/consumer';
+import { deleteRestaurant, listRestaurants, generateReport } from '../../routes/restaurants';
+import { cancelReservation } from '../../routes/consumer';
 
-import Banner from '../components/Banner';
+import Banner from '../../components/Banner';
 
-import testAccess from '../routes/test-access';
-import '../page-styles/Admin.css';
-import '../page-styles/RestaurantManager.css';
+import testAccess from '../../routes/test-access';
+import Alert from '../../components/Alert';
+import '../styles/Admin.css';
 
 export default function Administrator() {
     const [accessLevel, setAccessLevel] = useState("");

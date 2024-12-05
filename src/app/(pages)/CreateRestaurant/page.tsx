@@ -4,10 +4,10 @@ import { redirect } from 'next/navigation';
 
 import secureLocalStorage from 'react-secure-storage';
 
-import Banner from '../components/Banner';
-import RestaurantDetails from '../components/RestaurantDetails';
+import Banner from '../../components/Banner';
+import RestaurantDetails from '../../components/RestaurantDetails';
 
-import { createRestaurant } from '../routes/restaurants';
+import { createRestaurant } from '../../routes/restaurants';
 
 
 function CreateRestaurant() {
@@ -38,5 +38,4 @@ function CreateRestaurant() {
     );
 }
 
-// export default withRouter(CreateRestaurant);
 export default CreateRestaurant;
