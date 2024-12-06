@@ -104,9 +104,7 @@ export default function Consumer() {
     const getRestaurantTime = (restaurant: string) => {
         const timeArray = restaurantTimes[restaurant]
         if (timeArray != undefined) {
-            if(timeArray){
                 return timeArray
-            }
         }
         else{
             return [];
@@ -131,11 +129,11 @@ export default function Consumer() {
         if(date != "" && time != "" && guests != "" && restaurant != "" && email != ""){
             try{
                 const confCode = await createReservation(date, time, guests, restaurant, email) as string
-                setConfCode(confCode.confCode)
-                showNotification("Confirmed. Confirmation Code: " + confCode.confCode, 5000)
+                setConfCode(confCode)
+                showNotification("Confirmed. Confirmation Code: " + confCode, 5000)
             }
             catch(err){
-                showNotification(err, 5000)
+                showNotification(err as string, 5000)
             }
         }
         else{

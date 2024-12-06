@@ -58,12 +58,11 @@ export function createReservation(date: string, time: string, guests: string, re
             
             if(res.data.statusCode == 200) {
                 const confCode = res.data.result.confCode
-                resolve({
+                resolve(
                     confCode
-                });
+                );
             } else {
                 const error = res.data.body.error
-
                 reject(error);
             }
         }).catch(err => {
