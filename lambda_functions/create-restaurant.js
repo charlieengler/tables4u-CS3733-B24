@@ -13,7 +13,7 @@ export const handler = async (event) => {
 
     let CreateUser = (email, username, password) => {
         return new Promise((resolve, reject) => {
-            pool.query("INSERT INTO Employees (username, email, password, access_level) VALUES (?, ?, ?,?);", [username, username, password, "M"], (error, rows) => {
+            pool.query("INSERT INTO Employees (username, email, password, access_level) VALUES (?, ?, ?,?);", [username, email, password, "M"], (error, rows) => {
                 if (error) { return reject(error); }
                 return resolve(rows);
             })
