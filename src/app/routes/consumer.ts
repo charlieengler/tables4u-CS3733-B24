@@ -51,6 +51,26 @@ export function cancelReservation(confCode: String) {
     });
 }
 
+export function createReservation(date: string, time: string, guests: string, restaurant: string, email: string) {
+    return new Promise((resolve, reject) => {
+        const instance = createInstance('https://nlujztvubh.execute-api.us-east-2.amazonaws.com/Consumer-1');
+        instance.post('/create-reservation', {date: date, time: time, email: email, restaurantName: restaurant, guests: guests}).then(res => {
+            
+            if(res.data.statusCode == 200) {
+                const confCode = res.data.result.confCode
+                resolve(
+                    confCode
+                );
+            } else {
+                const error = res.data.body.error
+                reject(error);
+            }
+        }).catch(err => {
+            reject(err);
+        });
+    });
+}
+
 export function listActiveRestaurants(): Promise<string[]> {
     return new Promise((resolve, reject) => {
         const instance = createInstance('https://nlujztvubh.execute-api.us-east-2.amazonaws.com/Consumer-1');
@@ -75,14 +95,11 @@ export function searchAvailabilityRestaurant(restaurant: String, date: String) {
         const instance = createInstance('https://nlujztvubh.execute-api.us-east-2.amazonaws.com/Consumer-1');
 
         instance.post('/search-availability-restaurant', {restaurantName: restaurant, date: date}).then(res => {
-            console.log(restaurant)
-            console.log(date)
             if(res.data.statusCode == 200) {
                 const times = res.data.result.availableTimes
-                console.log(times)
-                resolve({
-                    times: times
-                });
+                resolve(
+                    times
+                );
             } else {
                 const error = res.data.body.error;
 
