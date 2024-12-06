@@ -64,6 +64,8 @@ export function logout() {
             secureLocalStorage.removeItem('uid');
             secureLocalStorage.removeItem('username');
             secureLocalStorage.removeItem('eid');
+            window.localStorage.removeItem('username');
+            window.localStorage.removeItem('password');
 
             resolve('Successfully logged out.');
         } catch (err) {

@@ -4,7 +4,11 @@
     background-color: rgba(0, 0, 0, 0.25);
     cursor: pointer;
     height: 100vw;
+    left: 0;
+    position: absolute;
+    top: 0;
     width: 100vw;
+    z-index: 100;
 }
 
 .alert-body {
@@ -26,6 +30,7 @@
     position: absolute;
     top: calc(50vh - 300px/2);
     width: 500px;
+    z-index: 101;
 }
 
 .alert-header {
@@ -33,7 +38,7 @@
     border-radius: var(--border-radius);
     font-size: 40px;
     font-weight: 600;
-    height: 80px;
+    height: fit-content;
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
@@ -41,4 +46,9 @@
     padding-top: 10px;
     text-align: center;
     width: calc(100% - 40px);
+}
+
+.alert-hint {
+    margin-bottom: 10px;
+    text-align: center;
 }

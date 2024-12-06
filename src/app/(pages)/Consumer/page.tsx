@@ -98,7 +98,9 @@ export default function Consumer() {
                     <div key={index} className="restaurant-item">
                         {restaurant}
                     </div>
-                )) : <div>Loading Restaurants...</div>}
+                )) : restaurantList.length == 0 ? 
+                <div>No Active Restaurants</div> 
+                : <div>Loading Restaurants...</div>}
             </div>
 
             <div className='find-reservation-container'>

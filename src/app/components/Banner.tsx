@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
 import { redirect } from 'next/navigation';
 
 import secureLocalStorage from 'react-secure-storage';
@@ -14,25 +13,12 @@ import { getRestaurantByManager } from '../routes/restaurants';
 import './styles/Banner.css';
 
 export default function Banner() {
-    // const navigate = useNavigate();
-
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loginMessage, setLoginMessage] = useState<string | null>(null);
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
 
-    // TODO: Check secure local storage for login state
-
     const createUser = () => {
-        // navigate('/create-restaurant', {
-        //     state: {
-        //         username: username,
-        //         password: password,
-        //     },
-        // });
-
-        // TODO: Pass username and password to /CreateRestaurant somehow
-
         redirect('/CreateRestaurant');
     }
 
@@ -50,7 +36,6 @@ export default function Banner() {
                 secureLocalStorage.setItem('uid', restaurant.uid);
             }
 
-            // navigate(loginRedirect);
             setIsLoggedIn(true);
             
         } catch(err) {
@@ -66,8 +51,6 @@ export default function Banner() {
             await logout(); 
 
             setIsLoggedIn(false);
-
-            // navigate('/');
         } catch(err) {
             setLoginMessage(err as string);
         } finally {
@@ -76,7 +59,6 @@ export default function Banner() {
     }
 
     useEffect(() => {
-        // TODO: Make sure the restaurant manager is saved in secureLocalStorage
         if(secureLocalStorage.getItem('eid'))
             setIsLoggedIn(true);
         else
@@ -89,7 +71,7 @@ export default function Banner() {
     return (
         <>
             <div className='main-container'>
-                <div className='title' onClick={() => {/*navigate('/')*/redirect('/')}}>Tables4u</div>
+                <div className='title' onClick={() => {redirect('/')}}>Tables4u</div>
 
                 {!isLoggedIn ?
                     <div className='login-container'>
@@ -100,7 +82,7 @@ export default function Banner() {
                                     setUsername(e.target.value);
                                     window.localStorage.setItem('username', e.target.value);
                                 }}
-                                placeholder='Username/Email'
+                                placeholder='Username'
                                 type='text'
                                 value={username}
                             />
@@ -109,6 +91,10 @@ export default function Banner() {
                                 onChange={e => {
                                     setPassword(e.target.value);
                                     window.localStorage.setItem('password', e.target.value);
+                                }}
+                                onKeyUp={e => {
+                                    if(e.key == 'Enter')
+                                        loginUser(username, password);
                                 }}
                                 placeholder='Password'
                                 type='password'

@@ -103,6 +103,10 @@ input[type=date] {
         cursor: default;
     }
 
+    input[type=date]:invalid {
+        border: 2px solid var(--error);
+    }
+
 input[type=number] {
     background-color: var(--background);
     border: 2px solid var(--text);
@@ -122,6 +126,17 @@ input[type=number] {
         cursor: default;
     }
 
+    input[type=number]:invalid {
+        border: 2px solid var(--error);
+    }
+
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button {
+        /* display: none; <- Crashes Chrome on hover */
+        -webkit-appearance: none;
+        margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+    }
+
 input[type=password] {
     background-color: var(--background);
     border: 2px solid var(--text);
@@ -139,6 +154,10 @@ input[type=password] {
         cursor: default;
     }
 
+    input[type=password]:invalid {
+        border: 2px solid var(--error);
+    }
+
 input[type=text] {
     background-color: var(--background);
     border: 2px solid var(--text);
@@ -154,6 +173,10 @@ input[type=text] {
     input[type=text]:disabled {
         border: none;
         cursor: default;
+    }
+
+    input[type=text]:invalid {
+        border: 2px solid var(--error);
     }
 
 .success {
