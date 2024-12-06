@@ -104,7 +104,9 @@ export default function Consumer() {
     const getRestaurantTime = (restaurant: string) => {
         const timeArray = restaurantTimes[restaurant]
         if (timeArray != undefined) {
-            return timeArray.times
+            if(timeArray){
+                return timeArray
+            }
         }
         else{
             return [];
