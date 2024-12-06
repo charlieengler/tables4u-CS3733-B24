@@ -13,6 +13,7 @@ import Banner from '../../components/Banner';
 import testAccess from '../../routes/test-access';
 import Alert from '../../components/Alert';
 import '../styles/Admin.css';
+import styles from '../styles/RestaurantManager.module.css';
 
 export default function Administrator() {
     const [accessLevel, setAccessLevel] = useState("");
@@ -111,20 +112,20 @@ export default function Administrator() {
             <Banner/>
             <div className='restaurant-data-container'>
                 <input className='restaurant-data-date-input2' onChange={e => genReport(e.target.value, restaurantName)} type='date'/>
-                <div className='restaurant-data'>
+                <div className={styles.restaurantData}>
                     {reserved && tables && utilizations && reserved.map((reservation, i) => {
                         const resString = (reservation[0] as number).toString();
                         const time = resString.substring(0, Math.floor(resString.length/2)) + ":" + resString.substring(Math.floor(resString.length/2), resString.length);
 
                         return (
-                            <div className='restaurant-data-timeslot-container' key={i.toString() + '-data'}>
-                                <div className='restaurant-data-table-time'>{time}</div>
+                            <div className={styles.restaurantDataTimeslotContainer} key={i.toString() + '-data'}>
+                                <div className={styles.restaurantDataTableTime}>{time}</div>
 
-                                <div className='restaurant-data-timeslot'>
+                                <div className={styles.restaurantDataTimeslot}>
                                     {(reservation as any[]).map((res, j) => {
                                         return (
                                             <div key={j.toString() + '-data-timeslot'}>
-                                                {j > 0 && <div className={'restaurant-data-table' + (res ? ' reserved' : '')}>{tables[j-1].seats}</div>}
+                                                 {j > 0 && <div className={`${styles.restaurantDataTable} ${(res ? styles.reserved : '')}`}>{tables[j-1].seats}</div>}
                                             </div>
                                         );
                                     })}
