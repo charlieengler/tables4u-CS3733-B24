@@ -104,7 +104,7 @@ export default function Consumer() {
     const getRestaurantTime = (restaurant: string) => {
         const timeArray = restaurantTimes[restaurant]
         if (timeArray != undefined) {
-            return timeArray;
+                return timeArray
         }
         else{
             return [];
@@ -113,6 +113,7 @@ export default function Consumer() {
 
     const handleTimeSelect = async (restaurant: string, time: number) => {
         setTime(String(time))
+        setRestaurant(restaurant)
         setSelectedTime((prev) => ({
             ...prev,
             [restaurant]: time, // Store the selected time for the specific restaurant
@@ -126,9 +127,14 @@ export default function Consumer() {
 
     const createResClick = async () => {
         if(date != "" && time != "" && guests != "" && restaurant != "" && email != ""){
-            const confCode = await createReservation(date, time, guests, restaurant, email) as string
-            setConfCode(confCode)
-            showNotification("Confirmed. Confirmation Code: " + confCode, 5000)
+            try{
+                const confCode = await createReservation(date, time, guests, restaurant, email) as string
+                setConfCode(confCode)
+                showNotification("Confirmed. Confirmation Code: " + confCode, 5000)
+            }
+            catch(err){
+                showNotification(err as string, 5000)
+            }
         }
         else{
             showNotification("Please fill all fields", 5000)

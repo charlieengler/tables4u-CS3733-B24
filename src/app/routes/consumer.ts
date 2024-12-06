@@ -58,12 +58,11 @@ export function createReservation(date: string, time: string, guests: string, re
             
             if(res.data.statusCode == 200) {
                 const confCode = res.data.result.confCode
-                resolve({
+                resolve(
                     confCode
-                });
+                );
             } else {
                 const error = res.data.body.error
-
                 reject(error);
             }
         }).catch(err => {
@@ -98,9 +97,9 @@ export function searchAvailabilityRestaurant(restaurant: String, date: String) {
         instance.post('/search-availability-restaurant', {restaurantName: restaurant, date: date}).then(res => {
             if(res.data.statusCode == 200) {
                 const times = res.data.result.availableTimes
-                resolve({
-                    times: times
-                });
+                resolve(
+                    times
+                );
             } else {
                 const error = res.data.body.error;
 
