@@ -163,21 +163,23 @@ export default function Consumer() {
 
             <div className='restaurant-container'>
             <button className='create-res-button' onClick={createResClick}>Create Reservation</button>
-            {restaurantList.length > 0 ? restaurantList.map((restaurant, index) => (
-                <div key={index} className="restaurant-item">
-                    <div>{restaurant}</div>
-                    <div>
-                        {getRestaurantTime(restaurant).map((time, timeIndex) => (
-                            <button
-                                key={`${restaurant}-${time}`}
-                                onClick={() => handleTimeSelect(restaurant, time)}
-                                className={`time-button ${isSelected(restaurant, time) ? 'selected' : ''}`}
-                            >
-                                {time}
-                            </button>
-                        ))}
+            {restaurantList.length > 0 ? restaurantList.map((restaurant, index) => {
+                return (
+                    <div key={index} className="restaurant-item">
+                        <div>{restaurant}</div>
+                        <div>
+                            {getRestaurantTime(restaurant).map((time, timeIndex) => (
+                                <button
+                                    key={`${restaurant}-${time}`}
+                                    onClick={() => handleTimeSelect(restaurant, time)}
+                                    className={`time-button ${isSelected(restaurant, time) ? 'selected' : ''}`}
+                                >
+                                    {time}
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                )) : (restaurantList.length == 0 ? 
+                )}) : (restaurantList.length == 0 ? 
                 <div>No Active Restaurants</div> 
                 : <div>Loading Restaurants...</div>)}
             </div>
