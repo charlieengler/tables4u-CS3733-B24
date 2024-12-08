@@ -1,4 +1,4 @@
-.search-container {
+.searchContainer {
     display: inline-block;
     background-color: var(--tertiary);
     border-radius: var(--border-radius);
@@ -10,7 +10,7 @@
     padding: 10px;
 }
 
-.restaurant-container {
+.restaurantContainer {
     display: inline-block;
     border-radius: var(--border-radius);
     margin-left: 5%;
@@ -19,14 +19,14 @@
     width: 50%;
 }
 
-.restaurant-item {
+.restaurantItem {
     padding: 10px;
     margin: 5px;
     background-color: var(--tertiary);
     border-radius: 4px;
 }
 
-.find-reservation-container {
+.findReservationContainer {
     display: inline-block;
     background-color: var(--tertiary);
     border-radius: var(--border-radius);
@@ -38,9 +38,7 @@
     padding: 10px;
 }
 
-
-
-.reservation-subcontainer {
+.reservationSubcontainer {
     background-color: white;
     display: inline-block;
     margin-left: 5%;
@@ -50,7 +48,7 @@
     border-radius: 10px;
 }
 
-.search-input {
+.searchInput {
     background-color: white;
     display: inline-block;
     margin-top: 10px;
@@ -71,7 +69,7 @@
     margin-right: auto;
 }
 
-.time-button {
+.timeButton {
     background-color: var(--primary);
     font-size: 16px;
     width: 10%;
@@ -81,16 +79,16 @@
     transition: background-color 0.3s ease;
 }
 
-.time-button:hover {
+.timeButton:hover {
     background-color: #ddd;
 }
 
-.time-button.selected {
+.timeButton.selected {
     background-color: black; /* Change to your desired highlight color */
     color: white;
 }
 
-.create-res-button {
+.createResButton {
     display: inline-block;
     background-color: var(--primary);
     font-size: 18px;
@@ -103,7 +101,7 @@
     width: 60%;
 }
 
-.search-button {
+.searchButton {
     background-color: var(--primary);
     font-size: 18px;
     margin-bottom: 10px;
@@ -115,7 +113,7 @@
     width: 60%;
 }
 
-.find-reservation-button {
+.findReservationButton {
     font-size: 18px;
     margin-bottom: 10px;
     margin-left: 20%;
@@ -126,7 +124,7 @@
     width: 60%;
 }
 
-.cancel-reservation-button {
+.cancelReservationButton {
     background-color: rgb(241, 45, 84);
     font-size: 18px;
     margin-bottom: 20px;

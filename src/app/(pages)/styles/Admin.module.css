@@ -1,4 +1,4 @@
-.delete-restaurant-button {
+.deleteRestaurantButton {
     font-size: 28px;
     margin-bottom: 20px;
     margin-left: 10%;
@@ -8,18 +8,21 @@
     padding-top: 10px;
     width: 80%;
 }
-.restaurant-data-date-input2 {
+
+.restaurantDataDateInput2 {
     margin-left: calc(50% - 150px);
     margin-right: calc(50% - 150px);
     margin-top: 15px !important;
     width: 300px !important;
     /* float: right; */
 }
-.admin-data-utilization {
+
+.adminDataUtilization {
     float: right;
     padding: 5px;
 }
-.reload-button-times {
+
+.reloadButtonTimes {
     font-size: 20;
     margin-left: calc(50% - 150px);
     margin-right: calc(50% - 150px);
@@ -29,7 +32,8 @@
     /* float: right; */
     font-family: Lucida Sans Unicode
 }
-.restaurant-data-container {
+
+.restaurantDataContainer {
     background-color: var(--tertiary);
     border-radius: var(--border-radius);
     font-size: 20px;
@@ -39,7 +43,8 @@
     padding-bottom: 15px;
     float:left;
 }
-.delete-restaurant-container {
+
+.deleteRestaurantContainer {
     background-color: var(--primary);
     border-radius: var(--border-radius);
     margin-left:5%;
@@ -48,7 +53,8 @@
     width: 40%;
     float: right;
 }
-.report-container {
+
+.reportContainer {
     background-color: var(--primary);
     border-radius: var(--border-radius);
     margin-left:5%;
@@ -58,7 +64,8 @@
     height: 400px;
     float: left;
 }
-.reload-button {
+
+.reloadButton {
     font-size: 28px;
     margin-bottom: 20px;
     margin-left: 20px;
@@ -71,7 +78,7 @@
     font-family: Lucida Sans Unicode
 }
 
-.restaurants-header {
+.restaurantsHeader {
     font-size: 28px;
     margin-bottom: 20px;
     margin-left: 20px;
@@ -82,7 +89,8 @@
     width: 40%;
     float:left;
 }
-.list-container{
+
+.listContainer{
     font-size: 28px;
     margin-bottom: 20px;
     margin-left: 10%;
@@ -95,7 +103,8 @@
     float:left;
     border-radius: 5px;
 }
-.admin-dropdown {
+
+.adminDropdown {
     background-color: white;
     display: inline-block;
     font-size: 28px;
@@ -109,7 +118,8 @@
     margin-right: auto;
     border-radius: 5px;
 }
-.restaurants-text {
+
+.restaurantsText {
     font-size: 28px;
     margin-bottom: 0px;
     margin-left: 20px;
@@ -119,7 +129,8 @@
     padding-top: 10px;
     width: 80%;
 }
-.restaurant-data-table-time {
+
+.restaurantDataTableTime {
     background-color: var(--secondary);
     border-radius: 5px;
     box-shadow: var(--box-shadow);
@@ -132,7 +143,7 @@
     width: 20%!important;
 }
 
-.create-restaurant-subcontainer {
+.createRestaurantSubcontainer {
     background-color: var(--primary);
     display: inline-block;
     margin-left: 2.5%;
@@ -140,7 +151,7 @@
     width: 45%;
 }
 
-.create-restaurant-title {
+.createRestaurantTitle {
     font-size: 42px;
     font-weight: 600;
     margin-bottom: 20px;
@@ -148,7 +159,7 @@
     width: 100%;
 }
 
-.create-restaurant-subtitle {
+.createRestaurantSubtitle {
     font-size: 24px;
     font-weight: 600;
     text-align: center;
