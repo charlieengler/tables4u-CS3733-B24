@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 import secureLocalStorage from 'react-secure-storage';
 
-import Alert from '../..//components/Alert';
+import Alert from '../../components/Alert';
 import Banner from '../../components/Banner';
 import RestaurantDetails from '../../components/RestaurantDetails';
 
