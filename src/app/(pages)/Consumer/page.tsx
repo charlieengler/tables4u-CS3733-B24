@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
 import { findReservation, cancelReservation, createReservation, listActiveRestaurants, searchAvailabilityRestaurant } from '../../routes/consumer';
 
 import Banner from '../../components/Banner';
 import NotificationBox from '../../components/NotificationBox';
 import useNotification from "../../components/useNotification";
 import '../../components/styles/NotificationBox.css'
-import '../styles/Consumer.css';
+import styles from '../styles/Consumer.module.css';
 
 interface Reservation {
     restaurant: string;
@@ -144,35 +143,35 @@ export default function Consumer() {
     return (
         <>
             <Banner/>
-            <div className='search-container'>
-                <input className='search-input' onChange={e => setDate(e.target.value)} placeholder="Date: YYYY-MM-DD" type="text" value={date}></input>
-                <input className='search-input' onChange={e => setTime(e.target.value)} placeholder="Time: 24HR" type="text" value={time}></input>
-                <input className='search-input' onChange={e => setGuests(e.target.value)} placeholder="Number of Guests" type="text" value={guests}></input>
-                <input className='search-input' onChange={e => setEmail(e.target.value)} placeholder="Email" type="text" value={email}></input>
-                <select className='dropdown' onChange={e => setRestaurant(e.target.value)} value={restaurant}>
+            <div className={styles.searchContainer}>
+                <input className={styles.searchInput} onChange={e => setDate(e.target.value)} placeholder="Date: YYYY-MM-DD" type="text" value={date}></input>
+                <input className={styles.searchInput} onChange={e => setTime(e.target.value)} placeholder="Time: 24HR" type="text" value={time}></input>
+                <input className={styles.searchInput} onChange={e => setGuests(e.target.value)} placeholder="Number of Guests" type="text" value={guests}></input>
+                <input className={styles.searchInput} onChange={e => setEmail(e.target.value)} placeholder="Email" type="text" value={email}></input>
+                <select className={styles.dropdown} onChange={e => setRestaurant(e.target.value)} value={restaurant}>
                     <option value="" disabled>Select a Restaurant</option>
                     {restaurantList?.map((option, index) => (
                         <option key={index} value={option}>
                             {option}
                         </option>
                     ))}</select>
-                <button className='search-button' onClick={findTables}>Search</button>
+                <button className={styles.searchButton} onClick={findTables}>Search</button>
             </div>
 
             
 
-            <div className='restaurant-container'>
-            <button className='create-res-button' onClick={createResClick}>Create Reservation</button>
+            <div className={styles.restaurantContainer}>
+            <button className={styles.createResButton} onClick={createResClick}>Create Reservation</button>
             {restaurantList.length > 0 ? restaurantList.map((restaurant, index) => {
                 return (
-                    <div key={index} className="restaurant-item">
+                    <div key={index} className={styles.restaurantItem}>
                         <div>{restaurant}</div>
                         <div>
                             {getRestaurantTime(restaurant).map((time, timeIndex) => (
                                 <button
                                     key={`${restaurant}-${time}`}
                                     onClick={() => handleTimeSelect(restaurant, time)}
-                                    className={`time-button ${isSelected(restaurant, time) ? 'selected' : ''}`}
+                                    className={`${styles.timeButton} ${isSelected(restaurant, time) ? styles.selected : ''}`}
                                 >
                                     {time}
                                 </button>
@@ -184,14 +183,14 @@ export default function Consumer() {
                 : <div>Loading Restaurants...</div>)}
             </div>
 
-            <div className='find-reservation-container'>
-                <input className='search-input' onChange={e => setEmail(e.target.value)} placeholder="Email" type="text" value={email}></input>
-                <input className='search-input' onChange={e => setConfCode(e.target.value)} placeholder="Confirmation Code" type="text" value={confCode}></input>
-                <div className='reservation-subcontainer'>
-                    <div className='reservation-info'>{reservation ? reservation.restaurant + " on " + reservation.date + " at " + reservation.time + " for " + reservation.guests + " guests" : ''}</div>
+            <div className={styles.findReservationContainer}>
+                <input className={styles.searchInput} onChange={e => setEmail(e.target.value)} placeholder="Email" type="text" value={email}></input>
+                <input className={styles.searchInput} onChange={e => setConfCode(e.target.value)} placeholder="Confirmation Code" type="text" value={confCode}></input>
+                <div className={styles.reservationSubcontainer}>
+                    <div className={styles.reservationInfo}>{reservation ? reservation.restaurant + " on " + reservation.date + " at " + reservation.time + " for " + reservation.guests + " guests" : ''}</div>
                 </div>
-                <button className='find-reservation-button' onClick={findRes}>Find Reservation</button>
-                <button className='cancel-reservation-button' onClick={cancelRes}>Cancel Reservation</button>
+                <button className={styles.findReservationButton} onClick={findRes}>Find Reservation</button>
+                <button className={styles.cancelReservationButton} onClick={cancelRes}>Cancel Reservation</button>
                 
             </div>
             <NotificationBox visible={visible} text={text} />
