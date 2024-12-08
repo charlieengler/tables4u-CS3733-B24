@@ -30,12 +30,14 @@ export default function Consumer() {
     const [restaurantTimes, setRestaurantTimes] = useState<{ [key: string]: number[] }>({});
     const [selectedTime, setSelectedTime] = useState<{ [key: string]: number | null }>({});
     const { visible, text, showNotification } = useNotification();
+    const [todaysDate, setToday] = useState<Date>(new Date())
 
     useEffect(() => {
         const fetchOptions = async () => {
             try{
                 const restaurants = await listActiveRestaurants();
                 setRestaurantList(restaurants);
+                setToday(new Date())
             }
             catch{
                 showNotification("No Active Restaurants", 10000)
@@ -45,41 +47,74 @@ export default function Consumer() {
         fetchOptions();
     }, []);
 
+    const dateInPast = function(firstDate: Date, secondDate: Date) {
+        if (firstDate.setHours(0, 0, 0, 0) <= secondDate.setHours(0, 0, 0, 0)) {
+          return true;
+        }
+        return false;
+    }
+
+
     const findTables = async () => {
-        if (restaurant == '') { //search all restaurants
-            for(const currentRestaurant of restaurantList){
+        const temp: number[] = 
+        date.split('-').map(Number);
+        const givenDate: Date = 
+        new Date(Date.UTC(temp[0], 
+        temp[1] - 1, temp[2], 5));
+
+        if(dateInPast(givenDate, todaysDate)){
+            showNotification("Please select a date in the future", 5000)
+        }
+        else{
+            if (restaurant == '') { //search all restaurants
+                for(const currentRestaurant of restaurantList){
+                    try {
+                        const times: number[] = await searchAvailabilityRestaurant(currentRestaurant, date) as number[];
+                        setRestaurantTimes(prevTimes => ({
+                            ...prevTimes,
+                            [currentRestaurant]: times,
+                        }));
+                    }
+                    catch (err) {
+                        showNotification("No Available Tables at " + currentRestaurant, 5000)
+                        console.log(err)
+                    }
+                }
+            }
+            else {   //search given restaurant
                 try {
-                    const times: number[] = await searchAvailabilityRestaurant(currentRestaurant, date) as number[];
+                    const times: number[] = await searchAvailabilityRestaurant(restaurant, date) as number[];
                     setRestaurantTimes(prevTimes => ({
                         ...prevTimes,
-                        [currentRestaurant]: times,
+                        [restaurant]: times,
                     }));
                 }
                 catch (err) {
-                    showNotification("No Available Tables at " + currentRestaurant, 5000)
+                    showNotification("No Available Tables", 5000)
                     console.log(err)
                 }
-            }
-        }
-        else {   //search given restaurant
-            try {
-                const times: number[] = await searchAvailabilityRestaurant(restaurant, date) as number[];
-                setRestaurantTimes(prevTimes => ({
-                    ...prevTimes,
-                    [restaurant]: times,
-                }));
-            }
-            catch (err) {
-                showNotification("No Available Tables", 5000)
-                console.log(err)
             }
         }
     }
 
     const findRes = async () => {
+        
+        
         try {
             const resData = await findReservation(email, confCode) as Reservation
-            setReservation(resData)
+            
+            const temp: number[] = 
+            resData.date.split('-').map(Number);
+            const reservationDate: Date = 
+            new Date(Date.UTC(temp[0], 
+            temp[1] - 1, temp[2], 5));
+            
+            if(dateInPast(reservationDate, todaysDate)){
+                showNotification("Reservation has passed", 5000)
+            }
+            else{
+                setReservation(resData)
+            }
         }
         catch (err) {
             showNotification("Reservation Doesn't Exist", 5000)
@@ -90,10 +125,21 @@ export default function Consumer() {
     const cancelRes = async () => {
         try {
             if (reservation != null) {
-                console.log(reservation.confCode)
-                await cancelReservation(reservation.confCode)
-                setReservation(null)
-                showNotification("Cancelled", 5000)
+                
+                const temp: number[] = 
+                reservation.date.split('-').map(Number);
+                const reservationDate: Date = 
+                new Date(Date.UTC(temp[0], 
+                temp[1] - 1, temp[2], 5));
+            
+                if(dateInPast(reservationDate, todaysDate)){
+                    showNotification("Reservation has passed", 5000)
+                }
+                else{
+                    await cancelReservation(reservation.confCode)
+                    setReservation(null)
+                    showNotification("Cancelled", 5000)
+                }
             }
         }
         catch (err) {
