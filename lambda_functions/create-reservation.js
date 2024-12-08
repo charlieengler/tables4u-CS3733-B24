@@ -9,7 +9,14 @@ export const handler = async (event) => {
         database: "tables4u"
     })
 
-
+    let getUID = (restaurantName) => {
+        return new Promise((resolve, reject) => {
+            pool.query("SELECT uid FROM Restaurants WHERE name = ?", [restaurantName], (error, rows) => {
+                if (error) { return reject(error) }
+                return resolve(rows[0])
+            })
+        })
+    }
 
     
     let getRid = (date, time, email, restaurant, guests) => {
@@ -65,11 +72,33 @@ export const handler = async (event) => {
             })
         })
     }
+
+    let closed = (restaurant) => {
+        return new Promise((resolve, reject) => {
+            pool.query("SELECT closings FROM Restaurants WHERE uid = ?", [restaurant], (error, rows) => {
+                if (error) { return reject(error); }
+                return resolve(rows[0]);
+            })
+        })
+    }
+
+    let restaurant = (await getUID(event.restaurantName)).uid
+
+
     
-    let rid = await getRid(event.date, event.time, event.email, event.restaurant, event.guests)
+    let rid = await getRid(event.date, event.time, event.email, restaurant, event.guests)
     if (rid == undefined){
-        let tablesBySize = await findTables(event.restaurant, event.guests)
-        // console.log(tablesBySize)
+        let isClosed = await closed(restaurant)
+        if((isClosed.closings).includes(event.date)){
+            pool.end();
+            return {
+                statusCode: 400,
+                body: {
+                    "error": "Restaurant is closed"
+                }
+            }
+        }
+        let tablesBySize = await findTables(restaurant, event.guests)
         let availableTables = []
         for (const tableID of tablesBySize) {
             let available = await checkAvailable(tableID.tid, event.date, event.time)
@@ -77,8 +106,8 @@ export const handler = async (event) => {
                 availableTables.push(tableID.tid)
             }
         }
-        // console.log("tables:", availableTables)
         if(availableTables.length == 0){
+            pool.end();
             return{
                 statusCode: 400,
                 body: {
@@ -87,33 +116,36 @@ export const handler = async (event) => {
             }
         }
 
-        await createReservation(event.date, event.time, event.email, event.restaurant, event.guests)
+        await createReservation(event.date, event.time, event.email, restaurant, event.guests)
         
-        let rid = await getRid(event.date, event.time, event.email, event.restaurant, event.guests)
+        let rid = await getRid(event.date, event.time, event.email, restaurant, event.guests)
         let confCode = String(rid.rid).padStart(6, '0');
         // console.log(confCode, rid.rid)
         await assignTable(availableTables[0], rid.rid)
         await setConfCode(confCode, rid.rid)
 
         if(confCode > 0){
+            pool.end();
             return{
                 statusCode: 200,
                 result: {
-                  "Confirmation Code: " : confCode,
-                  "Restaurant: " : event.restaurant,
-                  "Date: ": event.date,
-                  "Time: ": event.time
+                  "confCode" : confCode,
+                  "date": event.date,
+                  "time": event.time
                 }
             }
         }
+
+        pool.end();
         return {
             statusCode: 400,
             body: {
-              "error": "Invalid information",
+              "error": "Invalid information"
             }
         }
     }
     else{
+        pool.end();
         return{
         statusCode: 400,
         body: {
@@ -121,5 +153,4 @@ export const handler = async (event) => {
           }
         }
     }
-    pool.end()
 }

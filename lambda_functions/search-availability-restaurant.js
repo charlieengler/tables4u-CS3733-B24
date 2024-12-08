@@ -64,8 +64,21 @@ export const handler = async (event) => {
         })
     }
 
-    let isActive = await active(event.restaurantID)
+    let getUID = (restaurantName) => {
+        return new Promise((resolve, reject) => {
+            pool.query("SELECT uid FROM Restaurants WHERE name = ?", [restaurantName], (error, rows) => {
+                if (error) { return reject(error); }
+                return resolve(rows[0].uid);
+            })
+        })
+    }
+
+    let restaurantID = await getUID(event.restaurantName)
+    
+
+    let isActive = await active(restaurantID)
     if(isActive.isActive == false){
+        pool.end();
         return {
             statusCode: 400,
             body: {
@@ -74,8 +87,9 @@ export const handler = async (event) => {
         }
     }
     
-    let isClosed = await closed(event.restaurantID)
+    let isClosed = await closed(restaurantID)
     if((isClosed.closings).includes(event.date)){
+        pool.end();
         return {
             statusCode: 400,
             body: {
@@ -87,10 +101,8 @@ export const handler = async (event) => {
     let d = new Date(event.date)
 
     let day = d.getDay()
-    // console.log(day)
 
-    let schedules= await getSchedules(event.restaurantID)
-    // console.log("schedule", schedules)
+    let schedules= await getSchedules(restaurantID)
     let schedule=0
     switch(day){
     case 0:
@@ -115,6 +127,7 @@ export const handler = async (event) => {
         schedule = schedules.schedule_saturday
         break;
     default:
+        pool.end();
         return{
         statusCode:400,
         body:{
@@ -124,19 +137,13 @@ export const handler = async (event) => {
     }
 
     let hours = await getHours(schedule)
-    let reservations = await getReservations(event.restaurantID, event.date)
-
-    // console.log(hours)
-    // console.log(reservations)
-
-    let numTables = (await getNumTables(event.restaurantID))['COUNT(restaurant)']
-    // console.log(numTables)
+    let reservations = await getReservations(restaurantID, event.date)
+    let numTables = (await getNumTables(restaurantID))['COUNT(restaurant)']
 
     let reservedTables = []
     for (const reservation of reservations) {
         reservedTables.push([reservation.time, reservation.table_num])
     }
-    // console.log(reservedTables)
 
 
     function createCountsObject(start, end, increment) {
@@ -149,7 +156,6 @@ export const handler = async (event) => {
     
     // Example: Start at 1, end at 10, increment by 2
     const counts = createCountsObject(hours.opening, hours.closing, 100);
-    // console.log(counts);
 
 
     reservedTables.forEach(row => {
@@ -157,12 +163,6 @@ export const handler = async (event) => {
         counts[value] = (counts[value] || 0) + 1;
     })
 
-    // console.log(counts)
-
-    // let unavailableTimes = []
-    // for(let time = hours.opening; time < hours.closing; time=time+100){
-
-    // }
 
     let availableTimes = []
     for(let time = hours.opening; time < hours.closing; time=time+100){
@@ -170,20 +170,19 @@ export const handler = async (event) => {
             availableTimes.push(time)
         }
     }
-    // console.log(availableTimes)
 
-
-    pool.end()
 
     if(availableTimes.length > 0){
+        pool.end();
         return{
             statusCode:200,
             result: {
-                "Avaialble Times: " : availableTimes
+                "availableTimes" : availableTimes
             }
         }
     }
     else{
+        pool.end();
         return{
             statusCode: 400,
             body: {

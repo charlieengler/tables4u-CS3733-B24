@@ -37,5 +37,6 @@ export const handler = async (event) => {
         response.body = 'Unabled to decrypt token: ' + error;
     }
 
+    pool.end();
     return response;
 };

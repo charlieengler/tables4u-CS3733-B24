@@ -18,15 +18,6 @@ export const handler = async (event) => {
         })
     }
 
-    let getClosings = (restaurant) => {
-        return new Promise((resolve, reject) => {
-            pool.query("SELECT closings FROM Restaurants WHERE uid=?", [restaurant], (error, rows) => {
-                if (error) { return reject(error); }
-                return resolve(rows[0]);
-            })
-        })
-    }
-
     let active = (restaurantID, date) => {
         return new Promise((resolve, reject) => {
             pool.query("SELECT isActive FROM Restaurants WHERE uid = ?", [restaurantID], (error, rows) => {
@@ -35,7 +26,6 @@ export const handler = async (event) => {
             })
         })
     }
-
     
     let closed = (restaurantID) => {
         return new Promise((resolve, reject) => {
@@ -83,11 +73,7 @@ export const handler = async (event) => {
     }
 
 
-//----------------------------------------------------------------------------------
-
-
     let availableRestaurants = await getAllRestaurants()
-    // console.log(availableRestaurants)
     for(let i = 0; i < availableRestaurants.length; i++){
         let isActive = await active(availableRestaurants[i].uid)
         if(isActive.isActive == false){
@@ -104,10 +90,8 @@ export const handler = async (event) => {
         let d = new Date(event.date)
 
         let day = d.getDay()
-        // console.log(day)
 
         let schedules= await getSchedules(availableRestaurants[i].uid)
-        // console.log("schedule", schedules)
         let schedule=0
         switch(day){
         case 0:
@@ -132,6 +116,7 @@ export const handler = async (event) => {
             schedule = schedules.schedule_saturday
             break;
         default:
+            pool.end();
             return{
             statusCode:400,
             body:{
@@ -143,18 +128,12 @@ export const handler = async (event) => {
         let hours = await getHours(schedule)
         let reservations = await getReservations(availableRestaurants[i].uid, event.date)
 
-        // console.log(hours)
-        // console.log(reservations)
-        // console.log(availableRestaurants[i].uid, event.seats)
-
         let numTables = (await getNumTables(availableRestaurants[i].uid, event.seats)).length
-        // console.log("numtable", numTables)
 
         let reservedTables = []
         for (const reservation of reservations) {
             reservedTables.push([reservation.time, reservation.table_num])
         }
-        // console.log("reserved", reservedTables)
 
 
         function createCountsObject(start, end, increment) {
@@ -166,15 +145,12 @@ export const handler = async (event) => {
         }
         
         const counts = createCountsObject(hours.opening, hours.closing, 100);
-        // console.log("counts", counts);
 
 
         reservedTables.forEach(row => {
             const value = row[0]
             counts[value] = (counts[value] || 0) + 1;
         })
-
-        // console.log(counts)
 
         let availableTimes = []
         for(let time = hours.opening; time < hours.closing; time=time+100){
@@ -190,10 +166,8 @@ export const handler = async (event) => {
     }
     
 
-    pool.end()
-
-
     if(availableRestaurants.length > 0){
+        pool.end();
         return{
             statusCode: 200,
             result: {
@@ -201,6 +175,8 @@ export const handler = async (event) => {
             }
         }
     }
+
+    pool.end();
     return {
         statusCode: 400,
         body: {

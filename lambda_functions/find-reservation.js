@@ -28,22 +28,23 @@ export const handler = async (event) => {
     }
 
     let reservation = await getReservation(event.email, event.confCode)
-    
-    pool.end()
 
     if(reservation.length > 0){
         let restaurantName = await getRestaurantName(reservation[0].restaurant)
+        pool.end();
         return{
             statusCode: 200,
             result: {
-              "Confirmation Code: " : reservation[0].confirmation_code,
-              "Restaurant: " : restaurantName[0].name,
-              "Date: ": new Date(reservation[0].date).toISOString().split('T')[0],
-              "Time: ": reservation[0].time,
-              "Guests": reservation[0].guests
+              "confirmationCode" : reservation[0].confirmation_code,
+              "restaurant" : restaurantName[0].name,
+              "date": new Date(reservation[0].date).toISOString().split('T')[0],
+              "time": reservation[0].time,
+              "guests": reservation[0].guests
             }
         }
     }
+
+    pool.end();
     return {
         statusCode: 400,
         body: {

@@ -10,62 +10,39 @@ export const handler = async (event) => {
       database: "tables4u"
   }); 
 
-let getClosings = (restaurantName) => {
+let getClosings = (uid) => {
   return new Promise((resolve, reject) => {
-      pool.query("SELECT closings FROM tables4u.Restaurants WHERE name = ?;", [restaurantName], (error, rows) => {
+      pool.query("SELECT closings FROM tables4u.Restaurants WHERE uid = ?;", [uid], (error, rows) => {
           if (error) { return reject(error); }
           return resolve(rows[0].closings);
       })
   })
 }
-let updateClosings = (restaurantName, closings) => {
+let updateClosings = (uid, closings) => {
   return new Promise((resolve, reject) => {
-      pool.query("UPDATE tables4u.Restaurants SET closings = ? WHERE name = ?;", [closings,restaurantName], (error, rows) => {
+      pool.query("UPDATE tables4u.Restaurants SET closings = ? WHERE uid = ?;", [closings, uid], (error, rows) => {
           if (error) { return reject(error); }
           return resolve(rows[0]);
       })
   })
 }
-let newClosings = event.dates
-if(newClosings.length==0){
-  return {
-    statusCode: 400,
-    body: {
-      "error":"No Dates Given"
-    }
-  }
-}
+const newClosings = event.dates
 
-for (let i=0; i<newClosings.length; i++){
-  if(Date.parse(newClosings[i])<=Date.now())
-  {
-    return {
-      statusCode: 400,
-      body: {
-        "error": "Dates must be in the future"}
-    }
-  }
-  
-}
+const parsedClosings = [];
+for (let i=0; i<newClosings.length; i++)
+  if(Date.parse(newClosings[i]) > Date.now() && !newClosings.includes(newClosings[i], i+1))
+    parsedClosings.push(newClosings[i]);
 
-let closingsString = await getClosings(event.restaurantName)
 
-if(closingsString==null){
-  closingsString = JSON.stringify(newClosings)
-}
-else{
-  let closingsArray = JSON.parse(closingsString)
-  closingsArray=closingsArray.concat(newClosings)
-  closingsString = JSON.stringify(closingsArray)
-}
+let u = await updateClosings(event.uid, JSON.stringify(parsedClosings))
+let closingsString = await getClosings(event.uid)
 
-let u = await updateClosings(event.restaurantName, closingsString)
-pool.end()
+pool.end();
 
 return {
   statusCode: 200,
   body: {
-    "restaurant": event.restaurantName,
+    "uid": event.uid,
     "dates": closingsString
   }
 }

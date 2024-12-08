@@ -29,6 +29,7 @@ let updateClosings = (restaurantName, closings) => {
 let reopenings = event.dates
 // Check dates were given
 if(reopenings.length==0){
+  pool.end();
   return {
     statusCode: 400,
     body: {
@@ -40,6 +41,7 @@ if(reopenings.length==0){
 let closingsString = await getClosings(event.restaurantName)
 // Check if there are any closings
 if(closingsString==null){
+  pool.end();
   return {
     statusCode: 400,
     body: {
@@ -66,7 +68,7 @@ for (let i=0; i<closingsArray.length; i++){
 
 
 let u = await updateClosings(event.restaurantName, closingsString)
-pool.end()
+pool.end();
 
 return {
   statusCode: 200,
