@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 
 import secureLocalStorage from 'react-secure-storage';
 
+import Alert from '../..//components/Alert';
 import Banner from '../../components/Banner';
 import RestaurantDetails from '../../components/RestaurantDetails';
 
@@ -28,6 +29,7 @@ export default function RestaurantManager() {
     const days = ['M', 'T', 'W', 'R', 'F', 'S', 'S'];
 
     const [address, setAddress] = useState('');
+    const [alertMessage, setAlertMessage] = useState<string | null>(null);
     const [city, setCity] = useState('');
     const [closings, setClosings] = useState<string[]>([]);
     const [email, setEmail] = useState('');
@@ -136,7 +138,6 @@ export default function RestaurantManager() {
     }
 
     const updateDetails = async (email: string, username: string, password: string, name: string, address: string, cityState: string, zipcode: string) => {
-        // TODO: Verify that the password and repeat password is the same
         // TODO: Update the username in the banner if it changes
         try {
             const details = await updateRestaurantDetails(secureLocalStorage.getItem('uid') as number, secureLocalStorage.getItem('eid') as number, email, username, password, name, address, cityState, zipcode) as any;
@@ -145,6 +146,8 @@ export default function RestaurantManager() {
                 if(details.manDetails) {
                     setEmail(details.manDetails.email);
                     setUsername(details.manDetails.username);
+                } else {
+                    throw 'Unable to register manager!';
                 }
 
                 if(details.resDetails) {
@@ -153,12 +156,16 @@ export default function RestaurantManager() {
                     setCity(details.resDetails.city);
                     setState(details.resDetails.state);
                     setZipcode(details.resDetails.zipcode);
+                } else {
+                    throw 'Invalid restaurant details!';
                 }
+            } else {
+                throw 'Create restaurant failed!';
             }
-            
 
             setIsEditingDetails(false);
         } catch(err) {
+            setAlertMessage(err as string);
             console.error(err);
         }
     }
@@ -271,7 +278,11 @@ export default function RestaurantManager() {
 
                 <div className={styles.restaurantDataContainer}>
                     <div className={styles.restaurantContainerTitle}>Daily Report</div>
-                    <input className={styles.restaurantDataDateInput} onChange={e => genReport(uid as number, e.target.value)} type='date'/>
+                    <input
+                        className={styles.restaurantDataDateInput}
+                        onChange={e => genReport(uid as number, e.target.value)}
+                        type='date'
+                    />
                     <div className={styles.restaurantData}>
                         {reservations && tables && utilizations && reservations.map((reservation, i) => {
                             const resString = (reservation[0] as number).toString();
@@ -425,6 +436,10 @@ export default function RestaurantManager() {
                                                 onClick={async () => {
                                                     await updateTable(count, updatedTables[index].value, uid as number);
 
+                                                    setTables([]);
+                                                    setReservations([]);
+                                                    setUtilizations([]);
+
                                                     // TODO: Check to see if the above function call returned an error before disabling the update button
                                                     updatedTables[index].hasChanged = false;
                                                     setForceRedraw(forceRedraw + 1);
@@ -440,6 +455,8 @@ export default function RestaurantManager() {
                     </div>
                 </div>
             </div>
+
+            {alertMessage && <Alert callback={() => setAlertMessage(null)} message={alertMessage}>Error Editing Details!</Alert>}
         </>
     );
 }
