@@ -20,14 +20,8 @@ let listActiveRestaurants = () => {
 }
 
 let result = await listActiveRestaurants()
-pool.end()
-if(result.length==0){
-  return {
-    statusCode: 400,
-    body: {
-      "error": "No Active Restaurants"}
-  }
-}
+
+pool.end();
 return {
   statusCode: 200,
   body: {

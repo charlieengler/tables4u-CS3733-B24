@@ -3,9 +3,9 @@ import jwt from 'jsonwebtoken';
 
 const redirect = accessLevel => {
     if(accessLevel == 'A') {
-        return '/administrator';
+        return '/Administrator';
     } else if(accessLevel == 'M') {
-        return '/restaurant-manager';
+        return '/RestaurantManager';
     } else {
         return '/';
     }
@@ -36,6 +36,7 @@ export const handler = async (event) => {
         const employee = await getEmployee(event.username, event.password);
 
         if (employee == null) {
+            pool.end();
             return {
                 statusCode: 400,
                 body: {
@@ -54,24 +55,23 @@ export const handler = async (event) => {
             { expiresIn: "5d" },
         );
 
+        pool.end();
         return {
             statusCode: 200,
             body: {
                 token: token,
+                eid: employee.eid,
+                username: event.username,
                 redirect: redirect(employee.access_level),
             },
         };
     } catch(error) {
-
-    }
-    
-    pool.end()
-
-
-    return {
-        statusCode: 400,
-        body: {
-            "error": "Invalid username or password"
+        pool.end();
+        return {
+            statusCode: 400,
+            body: {
+                "error": error
+            }
         }
     }
 }

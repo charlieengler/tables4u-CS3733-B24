@@ -38,6 +38,7 @@ export const handler = async (event) => {
         let result = await cancelReservation(event.confCode)
 
         if(result){
+            pool.end();
             return{
                 statusCode: 200,
                 body: "Reservation Cancelled"
@@ -45,7 +46,7 @@ export const handler = async (event) => {
         }
     }
 
-    pool.end()
+    pool.end();
     return{
         statusCode: 400,
         body: {

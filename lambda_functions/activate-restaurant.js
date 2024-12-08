@@ -9,26 +9,30 @@ export const handler = async (event) => {
       password: "nTAR9EBBSsJcS8Gb",
       database: "tables4u"
   }); 
-let AccessLevel = (token) => {
+let AccessLevel = (eid) => {
   return new Promise((resolve, reject) => {
-      pool.query("SELECT access_level FROM tables4u.Employees WHERE eid = ? ;", [token], (error, rows) => {
+      pool.query("SELECT access_level FROM tables4u.Employees WHERE eid = ? ;", [eid], (error, rows) => {
           if (error) { return reject(error); }
           return resolve(rows[0]);
       })
   })
 }
 
-
-
-let setActive = (restaurant) => {
+let setActive = uid => {
   return new Promise((resolve, reject) => {
-      pool.query("UPDATE tables4u.Restaurants SET isActive =true WHERE name = ?;", [restaurant], (error, rows) => {
-          if (error) { return reject(error); }
-          return resolve(rows);
+      pool.query("SELECT isActive from tables4u.Restaurants WHERE uid = ?", [uid], (error, rows) => {
+        if(error) { reject(error); }
+        const activeStatus = !rows[0].isActive;
+
+        pool.query("UPDATE tables4u.Restaurants SET isActive = ? WHERE uid = ?;", [activeStatus, uid], (error, rows) => {
+            if (error) { return reject(error); }
+            return resolve(activeStatus);
+        })
       })
+      
   })
 }
-let a = await AccessLevel(event.token)
+let a = await AccessLevel(event.eid)
 a = a.access_level
 // return{body:{"equal":a==="M","access":a}}
 if(! (a==="M")){
@@ -37,16 +41,19 @@ if(! (a==="M")){
     statusCode: 400,
     body: {
       "error": "Invalid Permissions",
-      "access": a}
+      "access": a
+    }
   }
 }
-let result = await setActive(event.restaurant)
+let result = await setActive(event.uid)
 pool.end()
 
 return {
   statusCode: 200,
   body: {
-    "restaurant": event.restaurant,
-    "access": a}
+    "uid": event.uid,
+    "access": a,
+    "status": result,
+  }
 }
 }

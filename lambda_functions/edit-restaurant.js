@@ -26,6 +26,7 @@ export const handler = async (event) => {
     address, 
     state, 
     zipcode,  
+    closings, 
     schedule_monday, 
     schedule_tuesday, 
     schedule_wednesday, 
@@ -38,6 +39,7 @@ export const handler = async (event) => {
           address = ?, 
           state = ?,
           zipcode = ?,
+          closings = ?,
           schedule_monday = ?, 
           schedule_tuesday = ?, 
           schedule_wednesday = ?, 
@@ -47,7 +49,8 @@ export const handler = async (event) => {
           schedule_sunday = ? WHERE uid = ?`, [  
           address, 
           state, 
-          zipcode, 
+          zipcode,
+          closings, 
           schedule_monday, 
           schedule_tuesday, 
           schedule_wednesday, 
@@ -96,6 +99,7 @@ export const handler = async (event) => {
         event.address, 
         event.state, 
         event.zipcode,
+        event.closings, 
         event.schedule_monday, 
         event.schedule_tuesday, 
         event.schedule_wednesday, 
@@ -112,6 +116,7 @@ export const handler = async (event) => {
       }
 
       if(result == true){
+        pool.end();
         return {
           statusCode: 200,
           body: {
@@ -121,6 +126,7 @@ export const handler = async (event) => {
       }
     }
     else{
+      pool.end();
       return {
         statusCode: 400,
         body: {
@@ -128,9 +134,9 @@ export const handler = async (event) => {
         }
       }
     }
-
-    pool.end()
   }
+
+  pool.end();
   return{
     statusCode: 400,
     body: {
