@@ -60,6 +60,8 @@ export default function RestaurantManager() {
     const [zipcode, setZipcode] = useState('');
 
     const newClosingDateRef = createRef<HTMLInputElement>();
+    const scheduleContainerRef = createRef<HTMLDivElement>();
+    const tablesContainerRef = createRef<HTMLDivElement>();
 
     const calcTableCounts = (currentTables: any[]) => {
         const tempTableCounts = [0, 0, 0, 0, 0, 0, 0, 0];
@@ -351,7 +353,7 @@ export default function RestaurantManager() {
                         }
                     </div>
 
-                    <div className={styles.restaurantScheduleContainer}>
+                    <div className={styles.restaurantScheduleContainer} ref={scheduleContainerRef}>
                         <div className={styles.restaurantContainerTitle}>Daily Schedules</div>
                         <div className={styles.restaurantScheduleDaysContainer}>
                             <div className={styles.restaurantScheduleTitleContainer}>
@@ -372,6 +374,9 @@ export default function RestaurantManager() {
                                                 updatedSchedules[index] = true;
 
                                                 setForceRedraw(forceRedraw + 1);
+
+                                                if(scheduleContainerRef.current)
+                                                    scheduleContainerRef.current.scrollTop = scheduleContainerRef.current.scrollHeight;
                                             }}
                                             type='number'
                                         />
@@ -384,6 +389,9 @@ export default function RestaurantManager() {
                                                 updatedSchedules[index] = true;
 
                                                 setForceRedraw(forceRedraw + 1);
+
+                                                if(scheduleContainerRef.current)
+                                                    scheduleContainerRef.current.scrollTop = scheduleContainerRef.current.scrollHeight;
                                             }}
                                             type='number'
                                         />
@@ -407,7 +415,7 @@ export default function RestaurantManager() {
                         </div>
                     </div>
 
-                    <div className={styles.restaurantTablesContainer}>
+                    <div className={styles.restaurantTablesContainer} ref={tablesContainerRef}>
                         <div className={styles.restaurantContainerTitle}>Tables</div>
                         <div className={styles.restaurantTablesTitleContainer}>
                             <div className={styles.restaurantTablesTitle}>Number of Seats:</div>
@@ -425,7 +433,11 @@ export default function RestaurantManager() {
                                             onChange={e => {
                                                 updatedTables[index].value = Number(e.target.value);
                                                 updatedTables[index].hasChanged = true;
+
                                                 setForceRedraw(forceRedraw + 1);
+
+                                                if(tablesContainerRef.current)
+                                                    tablesContainerRef.current.scrollTop = tablesContainerRef.current.scrollHeight;
                                             }}
                                             type='number'
                                         />
