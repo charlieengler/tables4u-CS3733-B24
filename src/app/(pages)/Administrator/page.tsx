@@ -12,8 +12,8 @@ import Banner from '../../components/Banner';
 
 import testAccess from '../../routes/test-access';
 import Alert from '../../components/Alert';
-import '../styles/Admin.css';
-import styles from '../styles/RestaurantManager.module.css';
+import aStyles from '../styles/Admin.module.css';
+import rmStyles from '../styles/RestaurantManager.module.css';
 
 export default function Administrator() {
     const [accessLevel, setAccessLevel] = useState("");
@@ -110,26 +110,26 @@ export default function Administrator() {
     return (
         <>
             <Banner/>
-            <div className='restaurant-data-container'>
-                <input className='restaurant-data-date-input2' onChange={e => genReport(e.target.value, restaurantName)} type='date'/>
-                <div className={styles.restaurantData}>
+            <div className={aStyles.restaurantDataContainer}>
+                <input className={aStyles.restaurantDataDateInput2} onChange={e => genReport(e.target.value, restaurantName)} type='date'/>
+                <div className={rmStyles.restaurantData}>
                     {reserved && tables && utilizations && reserved.map((reservation, i) => {
                         const resString = (reservation[0] as number).toString();
                         const time = resString.substring(0, Math.floor(resString.length/2)) + ":" + resString.substring(Math.floor(resString.length/2), resString.length);
 
                         return (
-                            <div className={styles.restaurantDataTimeslotContainer} key={i.toString() + '-data'}>
-                                <div className={styles.restaurantDataTableTime}>{time}</div>
+                            <div className={rmStyles.restaurantDataTimeslotContainer} key={i.toString() + '-data'}>
+                                <div className={rmStyles.restaurantDataTableTime}>{time}</div>
 
-                                <div className={styles.restaurantDataTimeslot}>
+                                <div className={rmStyles.restaurantDataTimeslot}>
                                     {(reservation as any[]).map((res, j) => {
                                         return (
                                             <div key={j.toString() + '-data-timeslot'}>
-                                                 {j > 0 && <div className={`${styles.restaurantDataTable} ${(res ? styles.reserved : '')}`}>{tables[j-1].seats}</div>}
+                                                 {j > 0 && <div className={`${rmStyles.restaurantDataTable} ${(res ? rmStyles.reserved : '')}`}>{tables[j-1].seats}</div>}
                                             </div>
                                         );
                                     })}
-                                    <div className='admin-data-utilization'>{utilizations[i]}% : {availabilitys[i]}%</div>
+                                    <div className={aStyles.adminDataUtilization}>{utilizations[i]}% : {availabilitys[i]}%</div>
                                 </div>
                             </div>
                         );
@@ -137,38 +137,38 @@ export default function Administrator() {
                 </div>
             </div>
             
-            <div className='delete-restaurant-container'>
-                <select className='admin-dropdown' onChange={e => updateRestaurantName(e.target.value)} value={restaurantName}>
+            <div className={aStyles.deleteRestaurantContainer}>
+                <select className={aStyles.adminDropdown} onChange={e => updateRestaurantName(e.target.value)} value={restaurantName}>
                     <option value="" disabled>Select an Restaurant</option>
                     {restaurants?.map((option, index) => (
                         <option key={index} value={option}>
                             {option} 
                         </option>
                 ))}</select>
-                <button className='delete-restaurant-button' onClick={()=>{delRestaurant(); setRestaurantName("");} }>Delete Restaurant</button>
+                <button className={aStyles.deleteRestaurantButton} onClick={()=>{delRestaurant(); setRestaurantName("");} }>Delete Restaurant</button>
             </div>
-            <div className='delete-restaurant-container'>
-                <button className='reload-button' onClick={listRest}>&#x21bb;</button>
-                <h1 className='restaurants-header'>Restaurants:</h1>
-                <div className='list-container'>
-                    <h1 className='restaurants-text'> {restaurants?.map(restaunt => <p key={restaunt}>{restaunt}</p>)}</h1>
+            <div className={aStyles.deleteRestaurantContainer}>
+                <button className={aStyles.reloadButton} onClick={listRest}>&#x21bb;</button>
+                <h1 className={aStyles.restaurantsHeader}>Restaurants:</h1>
+                <div className={aStyles.listContainer}>
+                    <h1 className={aStyles.restaurantsText}> {restaurants?.map(restaunt => <p key={restaunt}>{restaunt}</p>)}</h1>
                 </div>
             </div>
-            <div className='delete-restaurant-container'>
-                <h1 className='restaurants-header'>Reservations:</h1>
-                <div className='list-container'>
-                <h1 className='restaurants-text'>Rid-Time:Table {reservations.map((res: {rid: number, time: number, table_num: number; }) => ""+res.rid+"-"+ res.time +": "+res.table_num).map(rest => <p key={rest}>{rest}</p>)}</h1> 
+            <div className={aStyles.deleteRestaurantContainer}>
+                <h1 className={aStyles.restaurantsHeader}>Reservations:</h1>
+                <div className={aStyles.listContainer}>
+                <h1 className={aStyles.restaurantsText}>Rid-Time:Table {reservations.map((res: {rid: number, time: number, table_num: number; }) => ""+res.rid+"-"+ res.time +": "+res.table_num).map(rest => <p key={rest}>{rest}</p>)}</h1> 
                 </div>
             </div>
-            <div className='delete-restaurant-container'>
-                <select className='admin-dropdown' onChange={e => setRid(e.target.value)} value={rid}>
+            <div className={aStyles.deleteRestaurantContainer}>
+                <select className={aStyles.adminDropdown} onChange={e => setRid(e.target.value)} value={rid}>
                     <option value="" disabled>Select a Reservation</option>
                     {rids?.map((option, index) => (
                         <option key={index} value={option}>
                             {option} 
                         </option>
                 ))}</select>
-                <button className='delete-restaurant-button' onClick={()=>{delReservation(rid); setRid("");} }>Delete Reservation</button>
+                <button className={aStyles.deleteRestaurantButton} onClick={()=>{delReservation(rid); setRid("");} }>Delete Reservation</button>
             </div>
         </>
         

@@ -1,0 +1,182 @@
+.consumerContainer {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 120px);
+}
+
+    .containerTitle {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        text-align: center;
+        width: 100%;
+    }
+
+    .dropdown {
+        background-color: white;
+        border-radius: 5px;
+        display: inline-block;
+        margin-top: 10px;
+        margin-left: 5%;
+        margin-right: 5%;
+        width: 90%;
+        margin-right: auto;
+    }
+
+    .restaurantContainer {
+        background-color: var(--tertiary);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        flex: 2;
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-top: 20px;
+        overflow-y: scroll;
+    }
+
+        .createResButton {
+            background-color: var(--secondary);
+            box-shadow: var(--box-shadow);
+            font-size: 24px;
+            margin-bottom: 10px;
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-top: 20px;
+            padding-bottom: 15px;
+            padding-top: 15px;
+            width: calc(100% - 40px);
+        }
+
+        .restaurantItem {
+            border-bottom: 2px solid var(--text);
+            border-top: 2px solid var(--text);
+            margin: 20px;
+            padding: 20px;
+        }
+
+            .restaurantTitle {
+                font-size: 24px;
+                font-weight: 600;
+                height: fit-content;
+                margin-bottom: 20px;
+                width: 100%;
+            }
+
+            .restaurantTimesContainer {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+            }
+
+                .timeButton {
+                    background-color: var(--secondary);
+                    cursor: pointer;
+                    flex: 1;
+                    font-size: 16px;
+                    margin: 10px;
+                    padding: 10px;
+                    transition: background-color 0.3s ease;
+                    width: fit-content;
+                }
+
+                    .timeButton:hover {
+                        background-color: #ddd;
+                    }
+
+                    .timeButton.selected {
+                        background-color: var(--primary);
+                    }
+
+    .searchFindContainer {
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+        gap: 20px;
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-top: 20px;
+    }
+
+        .findReservationContainer {
+            align-items: stretch;
+            background-color: var(--tertiary);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            flex: 1;
+            margin-right: auto;
+            padding: 20px;
+        }
+
+            .cancelReservationButton {
+                background-color: var(--error);
+                font-size: 18px;
+                margin-bottom: 20px;
+                margin-left: 20%;
+                margin-right: 20%;
+                margin-top: 10px;
+                padding-bottom: 10px;
+                padding-top: 10px;
+                width: 60%;
+            }
+
+            .findReservationButton {
+                font-size: 18px;
+                margin-bottom: 10px;
+                margin-left: 20%;
+                margin-right: 20%;
+                margin-top: 10px;
+                padding-bottom: 10px;
+                padding-top: 10px;
+                width: 60%;
+            }
+
+            .reservationInfo {
+                font-size: 20px;
+            }
+
+            .reservationSubcontainer {
+                background-color: var(--secondary);
+                border: 2px solid var(--text);
+                border-radius: var(--border-radius);
+                display: inline-block;
+                margin-bottom: 20px;
+                margin-left: 5%;
+                margin-right: 5%;
+                margin-top: 20px;
+                padding: 20px;
+                text-align: center;
+                width: 90%;
+            }
+
+        .searchContainer {
+            align-items: stretch;
+            background-color: var(--tertiary);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            flex: 1;
+            margin-right: auto;
+            padding: 20px;
+        }
+
+            .searchButton {
+                background-color: var(--secondary);
+                font-size: 18px;
+                margin-bottom: 10px;
+                margin-left: 20%;
+                margin-right: 20%;
+                margin-top: 10px;
+                padding-bottom: 10px;
+                padding-top: 10px;
+                width: 60%;
+            }
+
+    .searchInput {
+        background-color: white;
+        display: inline-block;
+        margin-top: 10px;
+        margin-left: 5%;
+        margin-right: 5%;
+        width: 90% !important;
+        margin-right: auto;
+    }

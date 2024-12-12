@@ -57,7 +57,7 @@ table {
     --error: #e76f51;
     --panel: #e0dfd7;
     --primary: #b9cec2;
-    --secondary: #f6e7cb;
+    --secondary: #efe1c5;
     --success: #d2faba;
     --tertiary: #f4f4ef;
     --text: #272727;
@@ -66,6 +66,7 @@ table {
 button {
     background-color: var(--secondary);
     border-radius: 5px;
+    box-shadow: var(--box-shadow);
     font-weight: 600;
     margin-bottom: 5px;
     margin-top: 5px;
